@@ -1,0 +1,14 @@
+version: 2.1
+
+orbs:
+  vrsn: tx3stn/vrsn@volatile
+
+workflows:
+  pr:
+    jobs:
+      - vrsn/check-version:
+          filters:
+            branches:
+              ignore:
+                - /^dependabot\/.*/
+                - main

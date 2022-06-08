@@ -1,0 +1,29 @@
+issues:
+  exclude-use-default: false
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
+linters:
+  disable-all: true
+  enable:
+    - depguard
+    - errcheck
+    - errname
+    - gocritic
+    - godot
+    - gofumpt
+    - gosimple
+    - gosec
+    - govet
+    - ineffassign
+    - misspell
+    - nonamedreturns
+    - paralleltest
+    - revive
+    - staticcheck
+    - typecheck
+    - unused
+    - wastedassign
+
+run:
+  timeout: 2m
