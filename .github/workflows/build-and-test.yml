@@ -1,0 +1,22 @@
+name: go build and test
+
+on:
+  push:
+    branches-ignore:
+      - main
+    permissions:
+      contents: read
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.18
+      - name: build binary
+        run: make build
+      - name: test
+        run: ./scripts/run-tests-with-summary.sh > "$GITHUB_STEP_SUMMARY"
