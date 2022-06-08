@@ -1,0 +1,6 @@
+/pkb
+!**/notes/
+coverage.out
+_null-ls*
+test/output/**/*.md
+!test/output/**/*.tpl.md
