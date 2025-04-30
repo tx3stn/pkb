@@ -9,6 +9,8 @@ const (
 	ErrNoSubDirectories Error = iota
 	// ErrCreatingParentDirectories is the error returned when something goes wrong creating parent directories.
 	ErrCreatingParentDirectories
+	// ErrReadingDirectory is the error returned when something dodes wrong reading the directory.
+	ErrReadingDirectory
 )
 
 // Error returns the string message for the given error.
@@ -19,6 +21,9 @@ func (e Error) Error() string {
 
 	case ErrCreatingParentDirectories:
 		return "error creating parent directory for file"
+
+	case ErrReadingDirectory:
+		return "error reading directory"
 
 	default:
 		return "unknown error"
