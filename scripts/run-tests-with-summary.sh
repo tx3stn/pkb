@@ -9,11 +9,11 @@ TEST_OUTPUT=$(make test)
 EXIT_CODE="$?"
 
 if [ "$EXIT_CODE" = 0 ]; then
-  echo "# 🎉 tests passed 🎉"
-  echo ""
-  SUMMARY=$(echo "$TEST_OUTPUT" | ./scripts/parse-tests.sh)
-  echo "$SUMMARY"
-  exit 0
+	echo "# 🎉 tests passed 🎉"
+	echo ""
+	SUMMARY=$(echo "$TEST_OUTPUT" | ./scripts/parse-tests.sh)
+	echo "$SUMMARY"
+	exit 0
 fi
 
 echo "# 🚩 some tests failed 🚩"
