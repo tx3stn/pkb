@@ -2,7 +2,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"os"
 
 	"github.com/tx3stn/pkb/cmd"
@@ -16,6 +16,7 @@ func main() {
 
 	if err := cmd.Execute(); err != nil {
 		code = 1
-		fmt.Printf("error: %v\n", err)
+
+		log.Printf("%s\n", err.Error())
 	}
 }

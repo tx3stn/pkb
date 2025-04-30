@@ -17,9 +17,9 @@ func TestGetFileName(t *testing.T) {
 	testTime, _ := time.Parse(time.RFC3339, "2022-09-19T16:20:00Z")
 
 	testCases := map[string]struct {
-		renderer    create.TemplateRenderer
-		expected    string
-		assertError require.ErrorAssertionFunc
+		renderer      create.TemplateRenderer
+		expected      string
+		expectedError error
 	}{
 		"uses prompt when no value in config": {
 			renderer: create.TemplateRenderer{
@@ -28,8 +28,8 @@ func TestGetFileName(t *testing.T) {
 				},
 				Templates: []config.Template{{}},
 			},
-			expected:    "prompted for this string",
-			assertError: require.NoError,
+			expected:      "prompted for this string",
+			expectedError: nil,
 		},
 		"combines values when mutiple provided": {
 			renderer: create.TemplateRenderer{
@@ -41,8 +41,8 @@ func TestGetFileName(t *testing.T) {
 				},
 				Time: testTime,
 			},
-			expected:    "2022-09-19-wow this is great-38-2022-foo",
-			assertError: require.NoError,
+			expected:      "2022-09-19-wow this is great-38-2022-foo",
+			expectedError: nil,
 		},
 	}
 
@@ -53,7 +53,7 @@ func TestGetFileName(t *testing.T) {
 			t.Parallel()
 
 			actual, err := tc.renderer.GetFileName()
-			tc.assertError(t, err)
+			require.ErrorIs(t, err, tc.expectedError)
 			assert.Equal(t, tc.expected, actual)
 		})
 	}
@@ -64,7 +64,7 @@ func TestOutputPath(t *testing.T) {
 
 	testCases := map[string]struct {
 		templateRenderer create.TemplateRenderer
-		assertError      require.ErrorAssertionFunc
+		expectedError    error
 		expected         string
 	}{
 		"returns path for single template": {
@@ -80,8 +80,8 @@ func TestOutputPath(t *testing.T) {
 					},
 				},
 			},
-			assertError: require.NoError,
-			expected:    "/home/username/notes/magic/simple.md",
+			expectedError: nil,
+			expected:      "/home/username/notes/magic/simple.md",
 		},
 		"creates full nested dir path when there are subtemplates": {
 			templateRenderer: create.TemplateRenderer{
@@ -104,8 +104,8 @@ func TestOutputPath(t *testing.T) {
 					},
 				},
 			},
-			assertError: require.NoError,
-			expected:    "/home/username/notes/foo/bar/wow/nested-example.md",
+			expectedError: nil,
+			expected:      "/home/username/notes/foo/bar/wow/nested-example.md",
 		},
 		"prompts user for directory input when specified in template config": {
 			templateRenderer: create.TemplateRenderer{
@@ -123,8 +123,8 @@ func TestOutputPath(t *testing.T) {
 					},
 				},
 			},
-			assertError: require.NoError,
-			expected:    "/home/username/notes/foo/dir/simple.md",
+			expectedError: nil,
+			expected:      "/home/username/notes/foo/dir/simple.md",
 		},
 	}
 
@@ -135,7 +135,7 @@ func TestOutputPath(t *testing.T) {
 			t.Parallel()
 
 			actual, err := tc.templateRenderer.OutputPath()
-			tc.assertError(t, err)
+			require.ErrorIs(t, err, tc.expectedError)
 			assert.Equal(t, tc.expected, actual)
 		})
 	}
@@ -150,7 +150,7 @@ func TestRender(t *testing.T) {
 		renderer        create.TemplateRenderer
 		templateContent string
 		expected        string
-		assertError     require.ErrorAssertionFunc
+		expectedError   error
 	}{
 		"expands expected variables": {
 			renderer: create.TemplateRenderer{
@@ -165,7 +165,7 @@ func TestRender(t *testing.T) {
 			},
 			templateContent: "{{.Date}}\n{{.Name}}\n{{.Time}}\n{{.CustomDateFormat}}\n{{.Week}}\n{{.Year}}",
 			expected:        "2022-09-19\nexample doc\n16:20\nMonday 19th September\n38\n2022",
-			assertError:     require.NoError,
+			expectedError:   nil,
 		},
 	}
 
@@ -177,8 +177,7 @@ func TestRender(t *testing.T) {
 
 			var actual bytes.Buffer
 			err := tc.renderer.Render(tc.templateContent, &actual)
-			tc.assertError(t, err)
-
+			require.ErrorIs(t, err, tc.expectedError)
 			assert.Equal(t, tc.expected, actual.String())
 		})
 	}

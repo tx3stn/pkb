@@ -1,16 +1,17 @@
 package dir
 
 import (
+	"fmt"
 	"io/fs"
 	"path/filepath"
-
-	"golang.org/x/exp/slices"
+	"slices"
 )
 
 // GetAllFilesInDirectory returns a slice of all of the files in a given directory.
 func GetAllFilesInDirectory(dir string) ([]string, error) {
 	filePaths := []string{}
-	err := filepath.WalkDir(dir, func(path string, f fs.DirEntry, err error) error {
+
+	if err := filepath.WalkDir(dir, func(path string, f fs.DirEntry, err error) error {
 		if f.IsDir() && slices.Contains(ignoreDirectories(), f.Name()) {
 			return filepath.SkipDir
 		}
@@ -20,9 +21,8 @@ func GetAllFilesInDirectory(dir string) ([]string, error) {
 		}
 
 		return nil
-	})
-	if err != nil {
-		return []string{}, err
+	}); err != nil {
+		return []string{}, fmt.Errorf("error walking directory: %w", err)
 	}
 
 	return filePaths, nil
