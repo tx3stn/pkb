@@ -3,10 +3,9 @@ package config
 
 import (
 	"encoding/json"
-	"errors"
+	"fmt"
 
 	"github.com/spf13/viper"
-	"github.com/tx3stn/pkb/internal/sentinel"
 )
 
 // CtxKey is the type for the config that gets bound to the cobra context
@@ -32,12 +31,12 @@ func Get() (Config, error) {
 
 	jsonContent, err := json.Marshal(conf)
 	if err != nil {
-		return Config{}, err
+		return Config{}, fmt.Errorf("error marshalling config: %w", err)
 	}
 
 	parsedConfig := Config{}
 	if err := json.Unmarshal(jsonContent, &parsedConfig); err != nil {
-		return Config{}, sentinel.Wrap(err, ErrUnmashallingJSON)
+		return Config{}, fmt.Errorf("%w: %w", ErrUnmashallingJSON, err)
 	}
 
 	return parsedConfig, nil
@@ -47,7 +46,7 @@ func Get() (Config, error) {
 func GetDirectory() (string, error) {
 	dir := viper.GetString("directory")
 	if dir == "" {
-		return "", errors.New("no directory defined in config file")
+		return "", ErrNoDirectory
 	}
 
 	return dir, nil

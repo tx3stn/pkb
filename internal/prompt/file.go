@@ -1,6 +1,8 @@
 package prompt
 
 import (
+	"fmt"
+
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/tx3stn/pkb/internal/dir"
 )
@@ -10,14 +12,14 @@ import (
 func SelectExistingFile(searchDir string) (string, error) {
 	allPaths, err := dir.GetAllFilesInDirectory(searchDir)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("error getting files in directory: %w", err)
 	}
 
 	answer := struct {
 		Selected string `survey:"file"`
 	}{}
 
-	err = survey.Ask([]*survey.Question{
+	if err = survey.Ask([]*survey.Question{
 		{
 			Name: "file",
 			Prompt: &survey.Select{
@@ -25,9 +27,8 @@ func SelectExistingFile(searchDir string) (string, error) {
 				Options: allPaths,
 			},
 		},
-	}, &answer)
-	if err != nil {
-		return "", err
+	}, &answer); err != nil {
+		return "", fmt.Errorf("error selecting existing note: %w", err)
 	}
 
 	return answer.Selected, nil

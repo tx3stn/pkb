@@ -4,7 +4,6 @@ package create
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -55,7 +54,7 @@ func NewTemplateRenderer(conf config.Config, templates []config.Template) Templa
 
 // CreateAndSaveFile creates the required file from the provided template
 // and saves it in the correct output directory.
-func (t TemplateRenderer) CreateAndSaveFile() (string, error) {
+func (t *TemplateRenderer) CreateAndSaveFile() (string, error) {
 	t.SelectedTemplate = t.Templates[len(t.Templates)-1]
 
 	outputPath, err := t.OutputPath()
@@ -64,21 +63,21 @@ func (t TemplateRenderer) CreateAndSaveFile() (string, error) {
 	}
 
 	if err := dir.CreateParentDirectories(outputPath); err != nil {
-		return "", err
+		return "", fmt.Errorf("error creating parent directories: %w", err)
 	}
 
 	templateFile := filepath.Clean(
 		filepath.Join(t.Config.Directory, ".templates", t.SelectedTemplate.File),
 	)
 
-	contents, err := ioutil.ReadFile(templateFile)
+	contents, err := os.ReadFile(templateFile)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("error reading file: %w", err)
 	}
 
 	file, err := os.Create(filepath.Clean(outputPath))
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("error creating file: %w", err)
 	}
 
 	defer func() {
@@ -91,14 +90,14 @@ func (t TemplateRenderer) CreateAndSaveFile() (string, error) {
 		return "", err
 	}
 
-	fmt.Printf("file created: %s\n", outputPath)
+	log.Printf("file created: %s\n", outputPath)
 
 	return outputPath, nil
 }
 
 // GetFileName either prompts the user for input or uses one of the supported
 // name specifiers to automatically set the name.
-func (t TemplateRenderer) GetFileName() (string, error) {
+func (t *TemplateRenderer) GetFileName() (string, error) {
 	if t.SelectedTemplate.NameFormat == "" {
 		return t.NamePrompt()
 	}
@@ -131,7 +130,7 @@ func (t TemplateRenderer) GetFileName() (string, error) {
 }
 
 // Render reads the template content and expands any variables.
-func (t TemplateRenderer) Render(content string, writer io.Writer) error {
+func (t *TemplateRenderer) Render(content string, writer io.Writer) error {
 	now := t.Time
 	year, week := now.ISOWeek()
 
@@ -151,7 +150,7 @@ func (t TemplateRenderer) Render(content string, writer io.Writer) error {
 		if date.IncludesSuffixFormat(config.CustomDateFormat) {
 			fixedDate, err := date.ReplaceSuffixFormatter(config.CustomDateFormat)
 			if err != nil {
-				return err
+				return fmt.Errorf("error adding date suffix: %w", err)
 			}
 
 			config.CustomDateFormat = fixedDate
@@ -160,11 +159,11 @@ func (t TemplateRenderer) Render(content string, writer io.Writer) error {
 
 	tpl, err := template.New("template").Parse(content)
 	if err != nil {
-		return err
+		return fmt.Errorf("error parsing template: %w", err)
 	}
 
 	if err := tpl.Execute(writer, config); err != nil {
-		return err
+		return fmt.Errorf("error writing template: %w", err)
 	}
 
 	return nil

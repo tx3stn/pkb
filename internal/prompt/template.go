@@ -2,11 +2,12 @@ package prompt
 
 import (
 	"fmt"
+	"maps"
+	"slices"
 	"sort"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/tx3stn/pkb/internal/config"
-	"golang.org/x/exp/maps"
 )
 
 // SelectorFunc is the type def for the selector func used in the TemplateSelector struct.
@@ -39,6 +40,7 @@ func (t TemplateSelector) SelectTemplateWithSubTemplates(
 	// More than one, so prompt the user to pick which one they want.
 	if len(templates) > 1 {
 		var err error
+
 		selected, err = t.SelectFunc(templates)
 		if err != nil {
 			return []config.Template{}, err
@@ -60,10 +62,10 @@ func SelectTemplate(templates config.Templates) (config.Template, error) {
 		Selected string `survey:"template"`
 	}{}
 
-	templateList := maps.Keys(templates)
+	templateList := slices.AppendSeq(make([]string, 0, len(templates)), maps.Keys(templates))
 	sort.Strings(templateList)
 
-	err := survey.Ask([]*survey.Question{
+	if err := survey.Ask([]*survey.Question{
 		{
 			Name: "template",
 			Prompt: &survey.Select{
@@ -71,14 +73,13 @@ func SelectTemplate(templates config.Templates) (config.Template, error) {
 				Options: templateList,
 			},
 		},
-	}, &answer)
-	if err != nil {
-		return config.Template{}, err
+	}, &answer); err != nil {
+		return config.Template{}, fmt.Errorf("%w: %w", ErrSelectingTemplate, err)
 	}
 
 	selected, ok := templates[answer.Selected]
 	if !ok {
-		return config.Template{}, fmt.Errorf("no template named '%s' exists in config file", answer.Selected)
+		return config.Template{}, fmt.Errorf("%w %s", ErrNoTemplateWithName, answer.Selected)
 	}
 
 	return selected, nil
