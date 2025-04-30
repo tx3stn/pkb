@@ -1,7 +1,6 @@
 package create
 
 import (
-	"fmt"
 	"regexp"
 	"strings"
 )
@@ -24,19 +23,14 @@ func SanitiseDirPath(path string) string {
 // is valid to use as a file name.
 func SanitiseFileName(name string) string {
 	baseName := strings.Trim(name, " ")
-
-	hasExtention := false
-	if strings.HasSuffix(baseName, ".md") {
-		hasExtention = true
-	}
-
+	hasExtention := strings.HasSuffix(baseName, ".md")
 	baseName = SanitiseDirPath(baseName)
 
 	separators := regexp.MustCompile(`[/]`)
 	baseName = separators.ReplaceAllString(baseName, "-")
 
 	if !hasExtention {
-		return fmt.Sprintf("%s.md", baseName)
+		return baseName + ".md"
 	}
 
 	return baseName
