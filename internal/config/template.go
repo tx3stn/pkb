@@ -1,7 +1,8 @@
 package config
 
 import (
-	"golang.org/x/exp/maps"
+	"maps"
+	"slices"
 )
 
 // Templates represents the structure of a collection of templates.
@@ -20,13 +21,20 @@ type Template struct {
 // First is a convenience method to return the first template from the
 // Templates map.
 func (ts Templates) First() Template {
-	return maps.Values(ts)[0]
+	templates := slices.AppendSeq(make([]Template, 0, len(ts)), maps.Values(ts))
+
+	return templates[0]
 }
 
 // GetNumberOfSubTemplates returns the number of sub templates defined for a
 // template.
 func (t Template) GetNumberOfSubTemplates() int {
-	return len(maps.Keys(t.SubTemplates))
+	subTemplates := slices.AppendSeq(
+		make([]string, 0, len(t.SubTemplates)),
+		maps.Keys(t.SubTemplates),
+	)
+
+	return len(subTemplates)
 }
 
 // HasSubTemplates checks if the Template struct has sub templates.
@@ -36,9 +44,11 @@ func (t Template) HasSubTemplates() bool {
 	switch t.GetNumberOfSubTemplates() {
 	case 0:
 		return false
+
 	// handle an empty template inside sub templates
 	case 1:
-		return !maps.Values(t.SubTemplates)[0].isEmpty()
+		return !t.SubTemplates.First().isEmpty()
+
 	default:
 		return true
 	}
