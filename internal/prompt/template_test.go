@@ -13,6 +13,8 @@ import (
 func TestSelectTemplateWithSubTemplates(t *testing.T) {
 	t.Parallel()
 
+	errorPickingTemplate := errors.New("error picking template")
+
 	testCases := map[string]struct {
 		selectorFunc  prompt.SelectorFunc
 		input         config.Templates
@@ -82,14 +84,14 @@ func TestSelectTemplateWithSubTemplates(t *testing.T) {
 		},
 		"returns error when select errors": {
 			selectorFunc: func(templates config.Templates) (config.Template, error) {
-				return config.Template{}, errors.New("error picking template")
+				return config.Template{}, errorPickingTemplate
 			},
 			input: config.Templates{
 				"foo": {File: "foo.tpl.md"},
 				"bar": {File: "bar.tpl.md"},
 			},
 			expected:      []config.Template{},
-			expectedError: errors.New("error picking template"),
+			expectedError: errorPickingTemplate,
 		},
 	}
 
