@@ -2,7 +2,7 @@
 package cmd
 
 import (
-	"fmt"
+	"log"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -11,8 +11,11 @@ import (
 )
 
 // Version is the CLI version set via linker flags at build time.
+//
+//nolint:gochecknoglobals
 var Version string
 
+//nolint:gochecknoglobals
 var rootCmd = &cobra.Command{
 	RunE: func(ccmd *cobra.Command, args []string) error {
 		return nil
@@ -24,18 +27,21 @@ var rootCmd = &cobra.Command{
 
 // Execute executes the root command.
 func Execute() error {
+	//nolint:wrapcheck
 	return rootCmd.Execute()
 }
 
+//nolint:gochecknoinits
 func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.AddCommand(CreateNew())
 	rootCmd.AddCommand(CreateEdit())
 	rootCmd.AddCommand(CreateCopy())
-	rootCmd.PersistentFlags().StringVar(&flags.ConfigFile, "config", "", "config file if not held at default location")
-	err := viper.BindPFlag("config", rootCmd.PersistentFlags().Lookup("config"))
-	if err != nil {
-		fmt.Printf("error binding --config flag: %s", err)
+	rootCmd.PersistentFlags().
+		StringVar(&flags.ConfigFile, "config", "", "config file if not held at default location")
+
+	if err := viper.BindPFlag("config", rootCmd.PersistentFlags().Lookup("config")); err != nil {
+		log.Printf("error binding --config flag: %s", err)
 		os.Exit(1)
 	}
 }
@@ -51,7 +57,7 @@ func initConfig() {
 	}
 
 	if err := viper.ReadInConfig(); err != nil {
-		fmt.Printf("error trying to read config file: %s", err)
+		log.Printf("error trying to read config file: %s", err)
 		os.Exit(1)
 	}
 }

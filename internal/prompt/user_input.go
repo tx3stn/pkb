@@ -24,9 +24,9 @@ func userPrompt(inputType string) (string, error) {
 	prompt := &survey.Input{
 		Message: fmt.Sprintf("enter %s:", inputType),
 	}
-	err := survey.AskOne(prompt, &name)
-	if err != nil {
-		return "", err
+
+	if err := survey.AskOne(prompt, &name); err != nil {
+		return "", fmt.Errorf("error prompting for user input: %w", err)
 	}
 
 	return name, nil

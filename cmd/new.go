@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/spf13/cobra"
 	"github.com/tx3stn/pkb/internal/config"
 	"github.com/tx3stn/pkb/internal/create"
@@ -15,7 +17,7 @@ func CreateNew() *cobra.Command {
 		RunE: func(ccmd *cobra.Command, args []string) error {
 			conf, err := config.Get()
 			if err != nil {
-				return err
+				return fmt.Errorf("error getting config file: %w", err)
 			}
 
 			selected := []config.Template{}
@@ -23,18 +25,18 @@ func CreateNew() *cobra.Command {
 
 			selected, err = selector.SelectTemplateWithSubTemplates(conf.Templates, selected)
 			if err != nil {
-				return err
+				return fmt.Errorf("error selecting template: %w", err)
 			}
 
 			renderer := create.NewTemplateRenderer(conf, selected)
 			createdFile, err := renderer.CreateAndSaveFile()
 			if err != nil {
-				return err
+				return fmt.Errorf("error creating file: %w", err)
 			}
 
 			if !flags.NoEdit {
 				if err := editor.OpenFile(conf.Editor, conf.Directory, createdFile); err != nil {
-					return err
+					return fmt.Errorf("error opening file in editor: %w", err)
 				}
 			}
 
@@ -44,6 +46,8 @@ func CreateNew() *cobra.Command {
 		Use:   "new",
 	}
 
-	cmd.Flags().BoolVar(&flags.NoEdit, "no-edit", false, "don't open the file in your editor after creating")
+	cmd.Flags().
+		BoolVar(&flags.NoEdit, "no-edit", false, "don't open the file in your editor after creating")
+
 	return cmd
 }

@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 
@@ -18,21 +19,22 @@ func CreateCopy() *cobra.Command {
 		RunE: func(ccmd *cobra.Command, args []string) error {
 			dir, err := config.GetDirectory()
 			if err != nil {
-				return err
+				return fmt.Errorf("error getting directory from config: %w", err)
 			}
 
 			selected, err := prompt.SelectExistingFile(dir)
 			if err != nil {
-				return err
+				return fmt.Errorf("error selecting file: %w", err)
 			}
 
 			content, err := os.ReadFile(filepath.Clean(selected))
 			if err != nil {
-				return err
+				return fmt.Errorf("error reading file: %w", err)
 			}
 
 			osc52.Copy(string(content))
-			fmt.Printf("copied %s contents to clipboard", selected)
+			log.Printf("copied %s contents to clipboard", selected)
+
 			return nil
 		},
 		Short: "select a note and copy it's content to your system clipboard",
