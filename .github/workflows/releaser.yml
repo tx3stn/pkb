@@ -16,8 +16,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - run: git config --global user.email tristan@github-action.com
-      - run: git config --global user.name 'Tristan AutoTag'
+      - run: git config --global user.email tx3stn@github-action.com
+      - run: git config --global user.name 'tx3stn github actions'
       - run: make push-tag
       - run: git fetch --force --tags
       - uses: actions/setup-go@v5
