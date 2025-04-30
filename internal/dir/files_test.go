@@ -13,13 +13,13 @@ func TestGetAllFilesInDirectory(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
-		inputDir    string
-		assertError require.ErrorAssertionFunc
-		expected    []string
+		inputDir      string
+		expectedError error
+		expected      []string
 	}{
 		"ReturnsAllFilesInDirectory": {
-			inputDir:    "no-ignores",
-			assertError: require.NoError,
+			inputDir:      "no-ignores",
+			expectedError: nil,
 			expected: []string{
 				"testdata/no-ignores/sub/dir/one",
 				"testdata/no-ignores/two",
@@ -27,17 +27,17 @@ func TestGetAllFilesInDirectory(t *testing.T) {
 			},
 		},
 		"DoesNotReturnFilesIngnoredDirectory": {
-			inputDir:    "ignores",
-			assertError: require.NoError,
+			inputDir:      "ignores",
+			expectedError: nil,
 			expected: []string{
 				"testdata/ignores/foo",
 				"testdata/ignores/bar",
 			},
 		},
 		"ReturnsEmptySliceForEmptyDirectory": {
-			inputDir:    "empty",
-			assertError: require.NoError,
-			expected:    []string{},
+			inputDir:      "empty",
+			expectedError: nil,
+			expected:      []string{},
 		},
 	}
 
@@ -48,8 +48,7 @@ func TestGetAllFilesInDirectory(t *testing.T) {
 			t.Parallel()
 
 			actual, err := dir.GetAllFilesInDirectory(filepath.Join("testdata", tc.inputDir))
-			tc.assertError(t, err)
-
+			require.ErrorIs(t, err, tc.expectedError)
 			reflect.DeepEqual(tc.expected, actual)
 		})
 	}

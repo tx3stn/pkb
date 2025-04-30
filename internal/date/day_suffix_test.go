@@ -106,24 +106,24 @@ func TestReplaceSuffixFormatter(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
-		input       string
-		expected    string
-		assertError require.ErrorAssertionFunc
+		input         string
+		expected      string
+		expectedError error
 	}{
 		"converts format string with incorrect suffix": {
-			input:       "Monday 1th Nov",
-			expected:    "Monday 1st Nov",
-			assertError: require.NoError,
+			input:         "Monday 1th Nov",
+			expected:      "Monday 1st Nov",
+			expectedError: nil,
 		},
 		"leaves correctly formatted string as is": {
-			input:       "Monday 2nd Nov",
-			expected:    "Monday 2nd Nov",
-			assertError: require.NoError,
+			input:         "Monday 2nd Nov",
+			expected:      "Monday 2nd Nov",
+			expectedError: nil,
 		},
 		"returns error when day can't be extracted": {
-			input:       "Monday Nov",
-			expected:    "",
-			assertError: require.Error,
+			input:         "Monday Nov",
+			expected:      "",
+			expectedError: date.ErrNoCaptureGroupDay,
 		},
 	}
 
@@ -134,7 +134,7 @@ func TestReplaceSuffixFormatter(t *testing.T) {
 			t.Parallel()
 
 			actual, err := date.ReplaceSuffixFormatter(tc.input)
-			tc.assertError(t, err)
+			require.ErrorIs(t, err, tc.expectedError)
 			assert.Equal(t, tc.expected, actual)
 		})
 	}

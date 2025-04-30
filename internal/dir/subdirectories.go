@@ -1,8 +1,9 @@
 // Package dir contains logic related to interacting with directories on the
-// filesystem during the the pkb interactions.
+// filesystem during the pkb interactions.
 package dir
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/pkg/errors"
@@ -13,7 +14,7 @@ import (
 func GetSubDirectories(parent string) ([]string, error) {
 	allFiles, err := os.ReadDir(parent)
 	if err != nil {
-		return []string{}, err
+		return []string{}, fmt.Errorf("%w: %w", ErrReadingDirectory, err)
 	}
 
 	subDirectories := []string{}
