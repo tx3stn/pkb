@@ -1,6 +1,7 @@
 package prompt
 
 import (
+	"fmt"
 	"sort"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -13,7 +14,7 @@ import (
 func SelectDirectory(parent string) (string, error) {
 	subDirectories, err := dir.GetSubDirectories(parent)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("error getting sub directories: %w", err)
 	}
 
 	sort.Strings(subDirectories)
@@ -23,7 +24,7 @@ func SelectDirectory(parent string) (string, error) {
 	}{}
 
 	// TODO: look at making the 'select directory' text configurable.
-	err = survey.Ask([]*survey.Question{
+	if err = survey.Ask([]*survey.Question{
 		{
 			Name: "directory",
 			Prompt: &survey.Select{
@@ -31,9 +32,8 @@ func SelectDirectory(parent string) (string, error) {
 				Options: subDirectories,
 			},
 		},
-	}, &answer)
-	if err != nil {
-		return "", err
+	}, &answer); err != nil {
+		return "", fmt.Errorf("error selecting directory: %w", err)
 	}
 
 	return answer.Selected, nil
