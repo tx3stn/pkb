@@ -14,7 +14,7 @@ import (
 func GetSubDirectories(parent string) ([]string, error) {
 	allFiles, err := os.ReadDir(parent)
 	if err != nil {
-		return []string{}, fmt.Errorf("error reading directory: %w", err)
+		return []string{}, fmt.Errorf("%w: %w", ErrReadingDirectory, err)
 	}
 
 	subDirectories := []string{}

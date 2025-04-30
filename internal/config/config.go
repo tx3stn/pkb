@@ -6,7 +6,6 @@ import (
 	"fmt"
 
 	"github.com/spf13/viper"
-	"github.com/tx3stn/pkb/internal/sentinel"
 )
 
 // CtxKey is the type for the config that gets bound to the cobra context
@@ -37,7 +36,7 @@ func Get() (Config, error) {
 
 	parsedConfig := Config{}
 	if err := json.Unmarshal(jsonContent, &parsedConfig); err != nil {
-		return Config{}, sentinel.Wrap(err, ErrUnmashallingJSON)
+		return Config{}, fmt.Errorf("%w: %w", ErrUnmashallingJSON, err)
 	}
 
 	return parsedConfig, nil
