@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/spf13/cobra"
 	"github.com/tx3stn/pkb/internal/config"
 	"github.com/tx3stn/pkb/internal/editor"
@@ -14,24 +16,24 @@ func CreateEdit() *cobra.Command {
 		RunE: func(ccmd *cobra.Command, args []string) error {
 			conf, err := config.Get()
 			if err != nil {
-				return err
+				return fmt.Errorf("error getting config: %w", err)
 			}
 
 			if flags.Pick {
 				file, err := prompt.SelectExistingFile(conf.Directory)
 				if err != nil {
-					return err
+					return fmt.Errorf("error selecting file: %w", err)
 				}
 
 				if err := editor.OpenFile(conf.Editor, conf.Directory, file); err != nil {
-					return err
+					return fmt.Errorf("error opening file in editor: %w", err)
 				}
 
 				return nil
 			}
 
 			if err := editor.Open(conf.Editor, conf.Directory); err != nil {
-				return err
+				return fmt.Errorf("error opening editor: %w", err)
 			}
 
 			return nil
@@ -40,6 +42,8 @@ func CreateEdit() *cobra.Command {
 		Use:   "edit",
 	}
 
-	cmd.Flags().BoolVar(&flags.Pick, "pick", false, "select the file you want to open before opening your editor")
+	cmd.Flags().
+		BoolVar(&flags.Pick, "pick", false, "select the file you want to open before opening your editor")
+
 	return cmd
 }

@@ -3,7 +3,7 @@ package config
 
 import (
 	"encoding/json"
-	"errors"
+	"fmt"
 
 	"github.com/spf13/viper"
 	"github.com/tx3stn/pkb/internal/sentinel"
@@ -32,7 +32,7 @@ func Get() (Config, error) {
 
 	jsonContent, err := json.Marshal(conf)
 	if err != nil {
-		return Config{}, err
+		return Config{}, fmt.Errorf("error marshalling config: %w", err)
 	}
 
 	parsedConfig := Config{}
@@ -47,7 +47,7 @@ func Get() (Config, error) {
 func GetDirectory() (string, error) {
 	dir := viper.GetString("directory")
 	if dir == "" {
-		return "", errors.New("no directory defined in config file")
+		return "", ErrNoDirectory
 	}
 
 	return dir, nil
