@@ -16,20 +16,16 @@ e.g.:
 }
 ```
 
-Changes to the schema should be validated through the `make lint-schema`
+Changes to the schema should be validated through the `make schema-validate`
 command to ensure they are correct.
-
-## WIP
-
-The following schemas are for work in progress functionality so may be subject
-to change:
-
-- `reading-list.json`
-- `todo-list.json`
 
 ## Examples
 
-Some example files have been added to display what the configuration should
-look like. If you try editing these with an editor that supports JSON schemas
-you should see the field names in your auto complete and the description of
-what each field is for.
+An [example file](./example.config.json) has been added to display what the
+configuration should look like.
+If you try editing it with an editor that supports JSON schemas you should see
+the field names in your auto complete and the description of what each field is for.
+
+This config file can be used to test out changes.
+It is configured to use the templates and create files in the `testdata`
+directory in the root of the repo.

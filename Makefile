@@ -2,13 +2,13 @@ BINARY_NAME=pkb
 DIR=./...
 VERSION ?= $(shell head -n 1 VERSION)
 
+define ajv-docker
+	docker run -v "${PWD}":/repo weibeld/ajv-cli:5.0.0 ajv --spec draft2020
+endef
+
 .PHONY: build
 build:
 	@go build -ldflags "-X github.com/tx3stn/pkb/cmd.Version=${VERSION}" -o ${BINARY_NAME} .
-
-.PHONY: fmt
-fmt:
-	@go fmt ${DIR}
 
 .PHONY: install
 install: build
@@ -16,17 +16,17 @@ install: build
 
 .PHONY: lint
 lint:
-	@golangci-lint run -v ./...
+	@golangci-lint run -v ${DIR}
 
-.PHONY: lint-schema
-lint-schema:
-	@curl --request POST --header "Content-Type: application/json" --data @schema/config.json https://www.json-schema-linter.com/api/jsonschemalinter/analyze
+.PHONY: schema-example-lint
+schema-example-lint:
+	@$(ajv-docker) validate -s /repo/schema/config.json -d /repo/schema/example.config.json
 
-.PHONY: push-tag
-push-tag:
-	@git tag -a ${VERSION} -m "Release ${VERSION}"
-	@git push origin ${VERSION}
+.PHONY: schema-validate
+schema-validate:
+	@$(ajv-docker) compile -s /repo/schema/config.json
 
 .PHONY: test
 test:
 	@CGO_ENABLED=1 go test ${DIR} -race -cover
+

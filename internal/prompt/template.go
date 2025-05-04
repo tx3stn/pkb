@@ -35,7 +35,10 @@ func (t TemplateSelector) SelectTemplateWithSubTemplates(
 ) ([]config.Template, error) {
 	// If there is only one sub template use that by default, so the user is not
 	// given a prompt with only a single value.
-	selected := templates.First()
+	selected, err := templates.First()
+	if err != nil {
+		return []config.Template{}, fmt.Errorf("error getting template: %w", err)
+	}
 
 	// More than one, so prompt the user to pick which one they want.
 	if len(templates) > 1 {

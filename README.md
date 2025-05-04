@@ -165,9 +165,9 @@ both look in the same place for your files.
 If you already have an `Obsidian` vault just set the `directory` in your `pkb`
 config file to the same location.
 
-`pkb` will expect templates to be in a directory called `.templates` in the
-location you specified as the `directory` in your config. You can make sure
-`Obsidian` is using the same location by going to `Settings > Templates` and
-setting the `Template folder location` value.
+`pkb` will expect templates to be in the directory defined in the `templates_dir`
+field of your config file inside the location you specified as the `directory`
+You can make sure `Obsidian` is using the same location by going to
+`Settings > Templates` and setting the `Template folder location` value.
 
 ![Template folder location](https://user-images.githubusercontent.com/14163530/197546420-02c0c607-93db-454b-9d38-743e23a879f3.png)
