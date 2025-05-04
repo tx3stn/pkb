@@ -55,6 +55,10 @@ func NewTemplateRenderer(conf config.Config, templates []config.Template) Templa
 // CreateAndSaveFile creates the required file from the provided template
 // and saves it in the correct output directory.
 func (t *TemplateRenderer) CreateAndSaveFile() (string, error) {
+	if err := t.Config.ValidatePaths(); err != nil {
+		return "", fmt.Errorf("error creating file: %w", err)
+	}
+
 	t.SelectedTemplate = t.Templates[len(t.Templates)-1]
 
 	outputPath, err := t.OutputPath()

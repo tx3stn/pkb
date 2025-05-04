@@ -4,6 +4,8 @@ package config
 import (
 	"encoding/json"
 	"fmt"
+	"os"
+	"path/filepath"
 
 	"github.com/spf13/viper"
 )
@@ -51,4 +53,19 @@ func GetDirectory() (string, error) {
 	}
 
 	return dir, nil
+}
+
+// ValidatePaths checks the paths defined in the config file exist, to give
+// helpful error messages when they don't.
+func (c Config) ValidatePaths() error {
+	if _, err := os.Stat(c.Directory); os.IsNotExist(err) {
+		return fmt.Errorf("%w '%s'", ErrDirectoryDoesNotExist, c.Directory)
+	}
+
+	templatePath := filepath.Join(c.Directory, c.TemplateDir)
+	if _, err := os.Stat(templatePath); os.IsNotExist(err) {
+		return fmt.Errorf("%w '%s'", ErrTemplateDirectoryDoesNotExist, templatePath)
+	}
+
+	return nil
 }
