@@ -1,9 +1,9 @@
 name: json schema lint
 
 on:
-  push:
-    branches-ignore:
-      - main
+  pull_request:
+    paths:
+      - schema/*.json
 
 jobs:
   lint-schema:
