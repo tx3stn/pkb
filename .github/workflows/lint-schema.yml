@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: 22
       - run: npm install -g ajv-cli
-      - run: ajv-cli --spec draft2020 compile -s schema/config.json
+      - run: ajv --spec draft2020 compile -s schema/config.json
         name: validate schema
-      - run: ajv-cli --spec draft2020 validate -s schema/config.json -d schema/example.config.json
+      - run: ajv --spec draft2020 validate -s schema/config.json -d schema/example.config.json
         name: lint example config
