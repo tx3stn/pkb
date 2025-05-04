@@ -9,6 +9,8 @@ const (
 	ErrUnmashallingJSON
 	// ErrNoDirectory is the error returned when the directory is not defined in the config file.
 	ErrNoDirectory
+	// ErrNoTemplates is the error returned when no templates can be found.
+	ErrNoTemplates
 )
 
 // Error is the error type.
@@ -28,6 +30,9 @@ func (e Error) Error() string {
 
 	case ErrNoDirectory:
 		return "no directory defined in config file"
+
+	case ErrNoTemplates:
+		return "no templates found in template map"
 
 	default:
 		return "unknown error"

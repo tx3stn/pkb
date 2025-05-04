@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"maps"
 	"slices"
 )
@@ -20,10 +21,14 @@ type Template struct {
 
 // First is a convenience method to return the first template from the
 // Templates map.
-func (ts Templates) First() Template {
+func (ts Templates) First() (Template, error) {
 	templates := slices.AppendSeq(make([]Template, 0, len(ts)), maps.Values(ts))
 
-	return templates[0]
+	if len(templates) == 0 {
+		return Template{}, fmt.Errorf("%w: %+v", ErrNoTemplates, ts)
+	}
+
+	return templates[0], nil
 }
 
 // GetNumberOfSubTemplates returns the number of sub templates defined for a
@@ -47,7 +52,12 @@ func (t Template) HasSubTemplates() bool {
 
 	// handle an empty template inside sub templates
 	case 1:
-		return !t.SubTemplates.First().isEmpty()
+		first, err := t.SubTemplates.First()
+		if err != nil {
+			return false
+		}
+
+		return !first.isEmpty()
 
 	default:
 		return true
