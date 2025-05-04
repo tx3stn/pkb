@@ -3,10 +3,9 @@
 package editor
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
-
-	"github.com/pkg/errors"
 )
 
 // Open opens the provided editor in the specified directory.
@@ -23,7 +22,7 @@ func OpenFile(editorCmd string, directory string, fileName string) error {
 	cmd.Stderr = os.Stderr
 
 	if err := cmd.Run(); err != nil {
-		return errors.Wrapf(err, "error opening %s in %s", fileName, editorCmd)
+		return fmt.Errorf("error opening %s in %s: %w", fileName, editorCmd, err)
 	}
 
 	return nil

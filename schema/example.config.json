@@ -7,34 +7,19 @@
 		"daily": {
 			"file": "daily.md",
 			"name_format": "{{.Date}}",
-			"output_dir": "daily",
+			"output_dir": "daily/{{.Year}}",
 			"custom_date_format": "Monday 2nd January 2006"
 		},
-		"interview": {
-			"file": "interview.md",
-			"output_dir": "interviews",
-			"sub_templates": {
-				"back-end": {
-					"file": "interview.back-end.md",
-					"custom_date_format": "Monday 2nd January",
-					"output_dir": "back-end"
-				},
-				"front-end": {
-					"file": "interview.front-end.md",
-					"output_dir": "front-end"
-				}
-			}
-		},
-		"projects": {
+		"minutes": {
 			"output_dir": "work/bar",
 			"sub_templates": {
-				"misc": {
-					"file": "projects.misc.md",
-					"output_dir": "{{.Prompt}}"
-				},
-				"minutes": {
+				"default": {
 					"file": "minutes.md",
 					"output_dir": "{{.Prompt}}"
+				},
+				"project": {
+					"file": "projects.md",
+					"output_dir": "{{.Select}}"
 				}
 			}
 		}

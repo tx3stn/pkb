@@ -156,6 +156,7 @@ The following values are currently supported:
 - `{{.Prompt}}` - will let you type in a new directory name. If the directory
 does not already exist it will be created.
 - `{{.Select}}` - select from existing directories inside the parent.
+- `{{.Year}}` - the current year.
 
 ## Using with Obsidian
 
