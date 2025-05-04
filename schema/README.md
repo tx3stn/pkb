@@ -16,16 +16,8 @@ e.g.:
 }
 ```
 
-Changes to the schema should be validated through the `make lint-schema`
+Changes to the schema should be validated through the `make schema-validate`
 command to ensure they are correct.
-
-## WIP
-
-The following schemas are for work in progress functionality so may be subject
-to change:
-
-- `reading-list.json`
-- `todo-list.json`
 
 ## Examples
 
