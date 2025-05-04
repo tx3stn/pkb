@@ -1,26 +1,26 @@
 {
-  "$schema": "https://raw.githubusercontent.com/tx3stn/pkb/main/schema/config.json",
-  "directory": "/home/tristan/git/pkb/test/output",
-  "editor": "nvim",
-  "templates": {
-    "daily": {
-      "file": "daily.tpl.md",
-      "custom_date_format": "Monday 2nd January 2006",
-      "name_format": "{{.Date}}",
-      "output_dir": "daily"
-    },
-    "projects": {
-      "output_dir": "work/company",
-      "sub_templates": {
-        "misc": {
-          "file": "projects.tpl.md",
-          "output_dir": "{{Prompt}}"
-        },
-        "minutes": {
-          "file": "minutes.tpl.md",
-          "output_dir": "{{Prompt}}"
-        }
-      }
-    }
-  }
+	"$schema": "https://raw.githubusercontent.com/tx3stn/pkb/main/schema/config.json",
+	"directory": "/home/tristan/git/pkb/testdata/output",
+	"editor": "nvim",
+	"templates": {
+		"daily": {
+			"file": "daily.tpl.md",
+			"custom_date_format": "Monday 2nd January 2006",
+			"name_format": "{{.Date}}",
+			"output_dir": "daily"
+		},
+		"projects": {
+			"output_dir": "work/company",
+			"sub_templates": {
+				"misc": {
+					"file": "projects.tpl.md",
+					"output_dir": "{{.Prompt}}"
+				},
+				"minutes": {
+					"file": "minutes.tpl.md",
+					"output_dir": "{{.Prompt}}"
+				}
+			}
+		}
+	}
 }
