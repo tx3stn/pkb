@@ -10,31 +10,23 @@ endef
 build:
 	@go build -ldflags "-X github.com/tx3stn/pkb/cmd.Version=${VERSION}" -o ${BINARY_NAME} .
 
-.PHONY: fmt
-fmt:
-	@go fmt ${DIR}
-
 .PHONY: install
 install: build
 	@sudo cp ./${BINARY_NAME} /usr/bin/${BINARY_NAME}
 
 .PHONY: lint
 lint:
-	@golangci-lint run -v ./...
+	@golangci-lint run -v ${DIR}
 
-.PHONY: lint-schema-example
-lint-schema-example:
+.PHONY: schema-example-lint
+schema-example-lint:
 	@$(ajv-docker) validate -s /repo/schema/config.json -d /repo/schema/example.config.json
 
-.PHONY: push-tag
-push-tag:
-	@git tag -a ${VERSION} -m "Release ${VERSION}"
-	@git push origin ${VERSION}
+.PHONY: schema-validate
+schema-validate:
+	@$(ajv-docker) compile -s /repo/schema/config.json
 
 .PHONY: test
 test:
 	@CGO_ENABLED=1 go test ${DIR} -race -cover
 
-.PHONY: validate-schema
-validate-schema:
-	@$(ajv-docker) compile -s /repo/schema/config.json
