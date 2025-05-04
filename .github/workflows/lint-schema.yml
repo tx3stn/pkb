@@ -4,8 +4,6 @@ on:
   push:
     branches-ignore:
       - main
-    paths:
-      - schema/*.json
 
 jobs:
   lint-schema:
