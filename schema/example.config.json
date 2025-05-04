@@ -5,22 +5,22 @@
 	"template_dir": "templates",
 	"templates": {
 		"daily": {
-			"file": "daily.tpl.md",
+			"file": "daily.md",
 			"name_format": "{{.Date}}",
 			"output_dir": "daily",
 			"custom_date_format": "Monday 2nd January 2006"
 		},
 		"interview": {
-			"file": "interview.tpl.md",
+			"file": "interview.md",
 			"output_dir": "interviews",
 			"sub_templates": {
 				"back-end": {
-					"file": "interview.back-end.tpl.md",
+					"file": "interview.back-end.md",
 					"custom_date_format": "Monday 2nd January",
 					"output_dir": "back-end"
 				},
 				"front-end": {
-					"file": "interview.front-end.tpl.md",
+					"file": "interview.front-end.md",
 					"output_dir": "front-end"
 				}
 			}
@@ -29,11 +29,11 @@
 			"output_dir": "work/company",
 			"sub_templates": {
 				"misc": {
-					"file": "projects.misc.tpl.md",
+					"file": "projects.misc.md",
 					"output_dir": "{{.Prompt}}"
 				},
 				"minutes": {
-					"file": "meeting-minutes.tpl.md",
+					"file": "minutes.md",
 					"output_dir": "{{.Prompt}}"
 				}
 			}
