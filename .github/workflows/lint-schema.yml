@@ -1,0 +1,25 @@
+name: json schema lint
+
+on:
+  push:
+    branches-ignore:
+      - main
+    paths:
+      - schema/*.json
+
+jobs:
+  lint-schema:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm install -g ajv-cli
+      - run: ajv-cli --spec draft2020 compile -s schema/config.json
+        name: validate schema
+      - run: ajv-cli --spec draft2020 validate -s schema/config.json -d schema/example.config.json
+        name: lint example config
