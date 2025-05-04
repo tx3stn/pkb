@@ -1,40 +1,41 @@
 {
-  "$schema": "https://raw.githubusercontent.com/tx3stn/pkb/main/schema/config.json",
-  "directory": "/home/tristan/notes",
-  "editor": "nvim",
-  "templates": {
-    "daily": {
-      "file": "daily.tpl.md",
-      "name_format": "{{.Date}}",
-      "output_dir": "daily"
-    },
-    "interview": {
-      "file": "interview.tpl.md",
-      "output_dir": "interviews",
-      "sub_templates": {
-        "back-end": {
-          "file": "interview.back-end.tpl.md",
-          "custom_date_format": "Monday 2nd January",
-          "output_dir": "back-end"
-        },
-        "front-end": {
-          "file": "interview.front-end.tpl.md",
-          "output_dir": "front-end"
-        }
-      }
-    },
-    "projects": {
-      "output_dir": "work/company",
-      "sub_templates": {
-        "misc": {
-          "file": "projects.misc.tpl.md",
-          "output_dir": "{{Prompt}}"
-        },
-        "minutes": {
-          "file": "meeting-minutes.tpl.md",
-          "output_dir": "{{Prompt}}"
-        }
-      }
-    }
-  }
+	"$schema": "https://raw.githubusercontent.com/tx3stn/pkb/main/schema/config.json",
+	"directory": "/home/tristan/notes",
+	"editor": "nvim",
+	"template_dir": "templates",
+	"templates": {
+		"daily": {
+			"file": "daily.tpl.md",
+			"name_format": "{{.Date}}",
+			"output_dir": "daily"
+		},
+		"interview": {
+			"file": "interview.tpl.md",
+			"output_dir": "interviews",
+			"sub_templates": {
+				"back-end": {
+					"file": "interview.back-end.tpl.md",
+					"custom_date_format": "Monday 2nd January",
+					"output_dir": "back-end"
+				},
+				"front-end": {
+					"file": "interview.front-end.tpl.md",
+					"output_dir": "front-end"
+				}
+			}
+		},
+		"projects": {
+			"output_dir": "work/company",
+			"sub_templates": {
+				"misc": {
+					"file": "projects.misc.tpl.md",
+					"output_dir": "{{.Prompt}}"
+				},
+				"minutes": {
+					"file": "meeting-minutes.tpl.md",
+					"output_dir": "{{.Prompt}}"
+				}
+			}
+		}
+	}
 }
