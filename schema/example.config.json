@@ -1,6 +1,6 @@
 {
 	"$schema": "https://raw.githubusercontent.com/tx3stn/pkb/main/schema/config.json",
-	"directory": "/home/tristan/notes",
+	"directory": "./testdata/output",
 	"editor": "nvim",
 	"template_dir": "templates",
 	"templates": {
