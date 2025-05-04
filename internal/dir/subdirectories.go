@@ -5,8 +5,6 @@ package dir
 import (
 	"fmt"
 	"os"
-
-	"github.com/pkg/errors"
 )
 
 // GetSubDirectories returns a slice of the sub driectories of the provided
@@ -26,8 +24,8 @@ func GetSubDirectories(parent string) ([]string, error) {
 	}
 
 	if len(subDirectories) == 0 {
-		return []string{}, errors.Wrapf(ErrNoSubDirectories, "no directories found in %s", parent)
+		return []string{}, fmt.Errorf("%w: parent '%s'", ErrNoSubDirectories, parent)
 	}
 
-	return []string{}, nil
+	return subDirectories, nil
 }

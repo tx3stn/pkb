@@ -128,6 +128,25 @@ func TestOutputPath(t *testing.T) {
 			expectedError: nil,
 			expected:      "/home/username/notes/foo/dir/simple.md",
 		},
+		"prompts user to select directory when specified in config": {
+			templateRenderer: create.TemplateRenderer{
+				Config: config.Config{
+					Directory: "/home/username/notes",
+				},
+				Name: "works.md",
+				DirectorySelect: func(_ string) (string, error) {
+					return "foo-dir", nil
+				},
+				Templates: []config.Template{
+					{
+						File:      "works.md",
+						OutputDir: "{{.Select}}",
+					},
+				},
+			},
+			expectedError: nil,
+			expected:      "/home/username/notes/foo-dir/works.md",
+		},
 		"adds year to path": {
 			templateRenderer: create.TemplateRenderer{
 				Config: config.Config{
