@@ -67,7 +67,7 @@ func (t *TemplateRenderer) CreateAndSaveFile() (string, error) {
 	}
 
 	templateFile := filepath.Clean(
-		filepath.Join(t.Config.Directory, ".templates", t.SelectedTemplate.File),
+		filepath.Join(t.Config.Directory, t.Config.TemplateDir, t.SelectedTemplate.File),
 	)
 
 	contents, err := os.ReadFile(templateFile)

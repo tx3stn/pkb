@@ -18,9 +18,10 @@ const ContextKey CtxKey = "config"
 type (
 	// Config represents the options defined in the config file.
 	Config struct {
-		Directory string    `json:"directory"`
-		Editor    string    `json:"editor"`
-		Templates Templates `json:"templates"`
+		Directory   string    `json:"directory"`
+		Editor      string    `json:"editor"`
+		TemplateDir string    `json:"template_dir"`
+		Templates   Templates `json:"templates"`
 	}
 )
 
