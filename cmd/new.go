@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
 	"github.com/tx3stn/pkb/internal/config"
@@ -35,7 +36,12 @@ func CreateNew() *cobra.Command {
 			}
 
 			if !flags.NoEdit {
-				if err := editor.OpenFile(conf.Editor, conf.Directory, createdFile); err != nil {
+				fullPath, err := filepath.Abs(createdFile)
+				if err != nil {
+					return fmt.Errorf("error getting absolute path of created file: %w", err)
+				}
+
+				if err := editor.OpenFile(conf.Editor, conf.Directory, fullPath); err != nil {
 					return fmt.Errorf("error opening file in editor: %w", err)
 				}
 			}
