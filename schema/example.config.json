@@ -7,7 +7,7 @@
 		"daily": {
 			"file": "daily.md",
 			"name_format": "{{.Date}}",
-			"output_dir": "daily",
+			"output_dir": "daily/{{.Year}}",
 			"custom_date_format": "Monday 2nd January 2006"
 		},
 		"interview": {

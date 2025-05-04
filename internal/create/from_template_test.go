@@ -62,6 +62,8 @@ func TestGetFileName(t *testing.T) {
 func TestOutputPath(t *testing.T) {
 	t.Parallel()
 
+	testTime, _ := time.Parse(time.RFC3339, "2022-09-19T16:20:00Z")
+
 	testCases := map[string]struct {
 		templateRenderer create.TemplateRenderer
 		expectedError    error
@@ -125,6 +127,23 @@ func TestOutputPath(t *testing.T) {
 			},
 			expectedError: nil,
 			expected:      "/home/username/notes/foo/dir/simple.md",
+		},
+		"adds year to path": {
+			templateRenderer: create.TemplateRenderer{
+				Config: config.Config{
+					Directory: "/home/username/notes",
+				},
+				Name: "simple.md",
+				Templates: []config.Template{
+					{
+						File:      "magic.tpl.md",
+						OutputDir: "magic/{{.Year}}",
+					},
+				},
+				Time: testTime,
+			},
+			expectedError: nil,
+			expected:      "/home/username/notes/magic/2022/simple.md",
 		},
 	}
 

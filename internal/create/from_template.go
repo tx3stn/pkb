@@ -197,6 +197,11 @@ func (t *TemplateRenderer) OutputPath() (string, error) {
 			}
 		}
 
+		if strings.Contains(config.OutputDir, "{{.Year}}") {
+			year, _ := t.Time.ISOWeek()
+			outputDir = strings.ReplaceAll(config.OutputDir, "{{.Year}}", strconv.Itoa(year))
+		}
+
 		output = append(output, SanitiseDirPath(outputDir))
 	}
 
