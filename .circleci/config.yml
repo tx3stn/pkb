@@ -3,12 +3,22 @@ version: 2.1
 orbs:
   vrsn: tx3stn/vrsn@volatile
 
+anchors:
+  dependabot-branch-regex: &dependabot-branch-regex /^dependabot\/.*/
+
 workflows:
   pr:
     jobs:
+      - vrsn/bump-version:
+          bump-type: patch
+          ssh-key-fingerprint: SHA256:68NchbKUuKqFAbVy3pDRjzJSEYRSxBuMCPDS5y9Clqo
+          filters:
+            branches:
+              only:
+                - *dependabot-branch-regex
       - vrsn/check-version:
           filters:
             branches:
               ignore:
-                - /^dependabot\/.*/
+                - *dependabot-branch-regex
                 - main
