@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/AlecAivazis/survey/v2"
 )
@@ -11,14 +12,14 @@ import (
 // SelectFromJSONFile reads the provided JSON file, and provides the options
 // as a list for the user to select.
 func SelectFromJSONFile(jsonPath string) ([]string, error) {
-	listFile, err := os.ReadFile(jsonPath)
+	listFile, err := os.ReadFile(filepath.Clean(jsonPath))
 	if err != nil {
-		return []string{}, err
+		return []string{}, fmt.Errorf("error reading file: %w", err)
 	}
 
 	var values []string
 	if err := json.Unmarshal(listFile, &values); err != nil {
-		return []string{}, err
+		return []string{}, fmt.Errorf("error unmarshalling options file to json: %w", err)
 	}
 
 	answer := struct {
@@ -37,5 +38,5 @@ func SelectFromJSONFile(jsonPath string) ([]string, error) {
 		return []string{}, fmt.Errorf("error selecting options from template: %w", err)
 	}
 
-	return answer.Selected, err
+	return answer.Selected, nil
 }
