@@ -214,7 +214,7 @@ func TestRender(t *testing.T) {
 			t.Parallel()
 
 			var actual bytes.Buffer
-			err := tc.renderer.Render(tc.templateContent, &actual)
+			err := tc.renderer.Render(tc.templateContent, &actual, "")
 			require.ErrorIs(t, err, tc.expectedError)
 			assert.Equal(t, tc.expected, actual.String())
 		})

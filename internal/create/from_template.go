@@ -35,6 +35,7 @@ type templateVariables struct {
 	CustomDateFormat string
 	Date             string
 	Name             string
+	TemplateDir      string
 	Time             string
 	Week             int
 	Year             int
@@ -90,7 +91,7 @@ func (t *TemplateRenderer) CreateAndSaveFile() (string, error) {
 		}
 	}()
 
-	if err := t.Render(string(contents), file); err != nil {
+	if err := t.Render(string(contents), file, templateFile); err != nil {
 		return "", err
 	}
 
@@ -134,16 +135,17 @@ func (t *TemplateRenderer) GetFileName() (string, error) {
 }
 
 // Render reads the template content and expands any variables.
-func (t *TemplateRenderer) Render(content string, writer io.Writer) error {
+func (t *TemplateRenderer) Render(content string, writer io.Writer, templatePath string) error {
 	now := t.Time
 	year, week := now.ISOWeek()
 
 	config := templateVariables{
-		Name: t.Name,
-		Date: now.Format("2006-01-02"),
-		Time: now.Format("15:04"),
-		Week: week,
-		Year: year,
+		Name:        t.Name,
+		Date:        now.Format("2006-01-02"),
+		TemplateDir: filepath.Dir(templatePath),
+		Time:        now.Format("15:04"),
+		Week:        week,
+		Year:        year,
 	}
 
 	// If a custom date format is specified on the template config run it through
@@ -217,4 +219,17 @@ func (t *TemplateRenderer) OutputPath() (string, error) {
 	output = append(output, SanitiseFileName(t.Name))
 
 	return filepath.Join(output...), nil
+}
+
+// SelectFromList prompts a user to select the options to add from the specified
+// json file.
+func (v templateVariables) SelectFromList(listFileName string) string {
+	opts := prompt.NewOptsFromFileSelector()
+
+	selected, err := opts.Select(filepath.Join(v.TemplateDir, listFileName))
+	if err != nil {
+		return err.Error()
+	}
+
+	return strings.Join(selected, ", ")
 }

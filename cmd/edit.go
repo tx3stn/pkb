@@ -20,7 +20,8 @@ func CreateEdit() *cobra.Command {
 			}
 
 			if flags.Pick {
-				file, err := prompt.SelectExistingFile(conf.Directory)
+				selector := prompt.NewFileSelector()
+				file, err := selector.SelectFromDir(conf.Directory)
 				if err != nil {
 					return fmt.Errorf("error selecting file: %w", err)
 				}

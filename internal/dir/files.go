@@ -12,6 +12,10 @@ func GetAllFilesInDirectory(dir string) ([]string, error) {
 	filePaths := []string{}
 
 	if err := filepath.WalkDir(dir, func(path string, f fs.DirEntry, err error) error {
+		if f == nil {
+			return fmt.Errorf("%w: %s", ErrInvalidDirectoryPath, dir)
+		}
+
 		if f.IsDir() && slices.Contains(ignoreDirectories(), f.Name()) {
 			return filepath.SkipDir
 		}
