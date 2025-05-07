@@ -13,7 +13,7 @@
 		"minutes": {
 			"output_dir": "work/bar",
 			"sub_templates": {
-				"default": {
+				"minutes": {
 					"file": "minutes.md",
 					"output_dir": "{{.Prompt}}"
 				},
