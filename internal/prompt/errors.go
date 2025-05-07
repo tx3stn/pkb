@@ -11,6 +11,11 @@ const (
 	// ErrGettingFilesInDirectory is the error returned when something goes wrong getting the
 	// files inside the specified directory.
 	ErrGettingFilesInDirectory
+	// ErrReadingOptionsFile is the error returned when something goes wrong reading
+	// the specified options file.
+	ErrReadingOptionsFile
+	// ErrInvalidOptionsFile is the error returned when the options file is not valid JSON.
+	ErrInvalidOptionsFile
 )
 
 // Error returns the message string for the given error.
@@ -24,6 +29,12 @@ func (e Error) Error() string {
 
 	case ErrGettingFilesInDirectory:
 		return "error getting files in directory"
+
+	case ErrReadingOptionsFile:
+		return "error reading file"
+
+	case ErrInvalidOptionsFile:
+		return "error unmarshalling options file to json"
 
 	default:
 		return "unknown error"

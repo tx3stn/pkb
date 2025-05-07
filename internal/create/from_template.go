@@ -224,7 +224,9 @@ func (t *TemplateRenderer) OutputPath() (string, error) {
 // SelectFromList prompts a user to select the options to add from the specified
 // json file.
 func (v templateVariables) SelectFromList(listFileName string) string {
-	selected, err := prompt.SelectFromJSONFile(filepath.Join(v.TemplateDir, listFileName))
+	opts := prompt.NewOptsFromFileSelector()
+
+	selected, err := opts.Select(filepath.Join(v.TemplateDir, listFileName))
 	if err != nil {
 		return err.Error()
 	}
