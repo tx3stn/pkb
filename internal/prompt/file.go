@@ -27,7 +27,7 @@ func NewFileSelector() FileSelector {
 func (f FileSelector) SelectFromDir(searchDir string) (string, error) {
 	allPaths, err := dir.GetAllFilesInDirectory(searchDir)
 	if err != nil {
-		return "", fmt.Errorf("error getting files in directory: %w", err)
+		return "", fmt.Errorf("%w: %w", ErrGettingFilesInDirectory, err)
 	}
 
 	selected, err := f.SelectFunc(allPaths)
@@ -55,33 +55,6 @@ func SelectFileFromDirectory(filesInDir []string) (string, error) {
 		},
 	}, &answer); err != nil {
 		return "", fmt.Errorf("error selecting existing file: %w", err)
-	}
-
-	return answer.Selected, nil
-}
-
-// SelectExistingFile prompt the user to select a file and returns the
-// full path of the selected file.
-func SelectExistingFile(searchDir string) (string, error) {
-	allPaths, err := dir.GetAllFilesInDirectory(searchDir)
-	if err != nil {
-		return "", fmt.Errorf("error getting files in directory: %w", err)
-	}
-
-	answer := struct {
-		Selected string `survey:"file"`
-	}{}
-
-	if err = survey.Ask([]*survey.Question{
-		{
-			Name: "file",
-			Prompt: &survey.Select{
-				Message: "select existing note:",
-				Options: allPaths,
-			},
-		},
-	}, &answer); err != nil {
-		return "", fmt.Errorf("error selecting existing note: %w", err)
 	}
 
 	return answer.Selected, nil
