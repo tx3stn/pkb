@@ -3,7 +3,7 @@ DIR=./...
 VERSION ?= $(shell head -n 1 VERSION)
 
 define ajv-docker
-	docker run -v "${PWD}":/repo weibeld/ajv-cli:5.0.0 ajv --spec draft2020
+	docker run --rm -v "${PWD}":/repo weibeld/ajv-cli:5.0.0 ajv --spec draft2020
 endef
 
 .PHONY: build
