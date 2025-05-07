@@ -39,6 +39,11 @@ func TestGetAllFilesInDirectory(t *testing.T) {
 			expectedError: nil,
 			expected:      []string{},
 		},
+		"ReturnsErrorForInvalidInputDirectory": {
+			inputDir:      "foo",
+			expectedError: dir.ErrInvalidDirectoryPath,
+			expected:      []string{},
+		},
 	}
 
 	for name, testCase := range testCases {

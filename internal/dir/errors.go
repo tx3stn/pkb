@@ -11,6 +11,9 @@ const (
 	ErrCreatingParentDirectories
 	// ErrReadingDirectory is the error returned when something dodes wrong reading the directory.
 	ErrReadingDirectory
+	// ErrInvalidDirectoryPath is the error returned when you pass a path that doesn't exist
+	// to GetAllFilesInDirectory.
+	ErrInvalidDirectoryPath
 )
 
 // Error returns the string message for the given error.
@@ -24,6 +27,9 @@ func (e Error) Error() string {
 
 	case ErrReadingDirectory:
 		return "error reading directory"
+
+	case ErrInvalidDirectoryPath:
+		return "invalid directory path"
 
 	default:
 		return "unknown error"
