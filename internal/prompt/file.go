@@ -19,7 +19,7 @@ type FileSelector struct {
 // NewFileSelector creates a new instance of the file selector.
 func NewFileSelector() FileSelector {
 	return FileSelector{
-		SelectFunc: SelectFileFromDirectory,
+		SelectFunc: SelectFile,
 	}
 }
 
@@ -38,9 +38,9 @@ func (f FileSelector) SelectFromDir(searchDir string) (string, error) {
 	return selected, nil
 }
 
-// SelectFileFromDirectory prompts the user to select a file and returns the
+// SelectFile prompts the user to select a file and returns the
 // full path of the selected file.
-func SelectFileFromDirectory(filesInDir []string) (string, error) {
+func SelectFile(filesInDir []string) (string, error) {
 	answer := struct {
 		Selected string `survey:"file"`
 	}{}
