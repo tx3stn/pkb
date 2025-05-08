@@ -183,6 +183,16 @@ func TestRender(t *testing.T) {
 	t.Parallel()
 
 	testTime, _ := time.Parse(time.RFC3339, "2022-09-19T16:20:00Z")
+	testRenderer := template.Renderer{
+		Config: config.Config{
+			Templates: map[string]config.Template{},
+		},
+		Name: "example doc",
+		SelectedTemplate: config.Template{
+			CustomDateFormat: "Monday 2nd January",
+		},
+		Time: testTime,
+	}
 
 	testCases := map[string]struct {
 		renderer        template.Renderer
@@ -191,18 +201,15 @@ func TestRender(t *testing.T) {
 		expectedError   error
 	}{
 		"expands expected variables": {
-			renderer: template.Renderer{
-				Config: config.Config{
-					Templates: map[string]config.Template{},
-				},
-				Name: "example doc",
-				SelectedTemplate: config.Template{
-					CustomDateFormat: "Monday 2nd January",
-				},
-				Time: testTime,
-			},
+			renderer:        testRenderer,
 			templateContent: "{{.Date}}\n{{.Name}}\n{{.Time}}\n{{.CustomDateFormat}}\n{{.Week}}\n{{.Year}}",
 			expected:        "2022-09-19\nexample doc\n16:20\nMonday 19th September\n38\n2022",
+			expectedError:   nil,
+		},
+		"expands obsidian builtin variables": {
+			renderer:        testRenderer,
+			templateContent: "{{date}}\n{{time}}\n{{title}}\n",
+			expected:        "2022-09-19\n16:20\nexample doc\n",
 			expectedError:   nil,
 		},
 	}
