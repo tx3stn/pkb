@@ -6,10 +6,10 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/tx3stn/pkb/internal/config"
-	"github.com/tx3stn/pkb/internal/create"
 	"github.com/tx3stn/pkb/internal/editor"
 	"github.com/tx3stn/pkb/internal/flags"
 	"github.com/tx3stn/pkb/internal/prompt"
+	"github.com/tx3stn/pkb/internal/template"
 )
 
 // CreateNew creates the new command "new" used to create new notes.
@@ -29,7 +29,7 @@ func CreateNew() *cobra.Command {
 				return fmt.Errorf("error selecting template: %w", err)
 			}
 
-			renderer := create.NewTemplateRenderer(conf, selected)
+			renderer := template.NewTemplateRenderer(conf, selected)
 			createdFile, err := renderer.CreateAndSaveFile()
 			if err != nil {
 				return fmt.Errorf("error creating file: %w", err)

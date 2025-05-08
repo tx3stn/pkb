@@ -1,5 +1,5 @@
-// Package create contains logic related to creating files.
-package create
+// Package template contains logic related to creating files from templates.
+package template
 
 import (
 	"fmt"
