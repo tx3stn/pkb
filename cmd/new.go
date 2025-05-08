@@ -29,7 +29,7 @@ func CreateNew() *cobra.Command {
 				return fmt.Errorf("error selecting template: %w", err)
 			}
 
-			renderer := template.NewTemplateRenderer(conf, selected)
+			renderer := template.NewRenderer(conf, selected)
 			createdFile, err := renderer.CreateAndSaveFile()
 			if err != nil {
 				return fmt.Errorf("error creating file: %w", err)

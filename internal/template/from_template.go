@@ -18,8 +18,8 @@ import (
 	"github.com/tx3stn/pkb/internal/prompt"
 )
 
-// TemplateRenderer holds the config required to render and save the template.
-type TemplateRenderer struct {
+// Renderer holds the config required to render and save the template.
+type Renderer struct {
 	Config           config.Config
 	DirectoryPrompt  func() (string, error)
 	DirectorySelect  func(string) (string, error)
@@ -30,20 +30,9 @@ type TemplateRenderer struct {
 	Templates        []config.Template
 }
 
-// templateVariables are the variables that are expanded when rendering the template.
-type templateVariables struct {
-	CustomDateFormat string
-	Date             string
-	Name             string
-	TemplateDir      string
-	Time             string
-	Week             int
-	Year             int
-}
-
-// NewTemplateRenderer creates a new instance of the TemplateRenderer.
-func NewTemplateRenderer(conf config.Config, templates []config.Template) TemplateRenderer {
-	return TemplateRenderer{
+// NewRenderer creates a new instance of the TemplateRenderer.
+func NewRenderer(conf config.Config, templates []config.Template) Renderer {
+	return Renderer{
 		Config:          conf,
 		DirectoryPrompt: prompt.EnterDirectory,
 		DirectorySelect: prompt.SelectDirectory,
@@ -55,7 +44,7 @@ func NewTemplateRenderer(conf config.Config, templates []config.Template) Templa
 
 // CreateAndSaveFile creates the required file from the provided template
 // and saves it in the correct output directory.
-func (t *TemplateRenderer) CreateAndSaveFile() (string, error) {
+func (t *Renderer) CreateAndSaveFile() (string, error) {
 	if err := t.Config.ValidatePaths(); err != nil {
 		return "", fmt.Errorf("error creating file: %w", err)
 	}
@@ -102,7 +91,7 @@ func (t *TemplateRenderer) CreateAndSaveFile() (string, error) {
 
 // GetFileName either prompts the user for input or uses one of the supported
 // name specifiers to automatically set the name.
-func (t *TemplateRenderer) GetFileName() (string, error) {
+func (t *Renderer) GetFileName() (string, error) {
 	if t.SelectedTemplate.NameFormat == "" {
 		return t.NamePrompt()
 	}
@@ -135,11 +124,11 @@ func (t *TemplateRenderer) GetFileName() (string, error) {
 }
 
 // Render reads the template content and expands any variables.
-func (t *TemplateRenderer) Render(content string, writer io.Writer, templatePath string) error {
+func (t *Renderer) Render(content string, writer io.Writer, templatePath string) error {
 	now := t.Time
 	year, week := now.ISOWeek()
 
-	config := templateVariables{
+	config := Variables{
 		Name:        t.Name,
 		Date:        now.Format("2006-01-02"),
 		TemplateDir: filepath.Dir(templatePath),
@@ -178,7 +167,7 @@ func (t *TemplateRenderer) Render(content string, writer io.Writer, templatePath
 // OutputPath walks the sub template config to get build the full output path
 // handling any nested sub templates and prompts or selections for output
 // directories.
-func (t *TemplateRenderer) OutputPath() (string, error) {
+func (t *Renderer) OutputPath() (string, error) {
 	output := []string{t.Config.Directory}
 
 	for _, config := range t.Templates {
@@ -219,17 +208,4 @@ func (t *TemplateRenderer) OutputPath() (string, error) {
 	output = append(output, SanitiseFileName(t.Name))
 
 	return filepath.Join(output...), nil
-}
-
-// SelectFromList prompts a user to select the options to add from the specified
-// json file.
-func (v templateVariables) SelectFromList(listFileName string) string {
-	opts := prompt.NewOptsFromFileSelector()
-
-	selected, err := opts.Select(filepath.Join(v.TemplateDir, listFileName))
-	if err != nil {
-		return err.Error()
-	}
-
-	return strings.Join(selected, ", ")
 }

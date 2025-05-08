@@ -17,12 +17,12 @@ func TestGetFileName(t *testing.T) {
 	testTime, _ := time.Parse(time.RFC3339, "2022-09-19T16:20:00Z")
 
 	testCases := map[string]struct {
-		renderer      template.TemplateRenderer
+		renderer      template.Renderer
 		expected      string
 		expectedError error
 	}{
 		"uses prompt when no value in config": {
-			renderer: template.TemplateRenderer{
+			renderer: template.Renderer{
 				NamePrompt: func() (string, error) {
 					return "prompted for this string", nil
 				},
@@ -32,7 +32,7 @@ func TestGetFileName(t *testing.T) {
 			expectedError: nil,
 		},
 		"combines values when mutiple provided": {
-			renderer: template.TemplateRenderer{
+			renderer: template.Renderer{
 				NamePrompt: func() (string, error) {
 					return "wow this is great", nil
 				},
@@ -65,12 +65,12 @@ func TestOutputPath(t *testing.T) {
 	testTime, _ := time.Parse(time.RFC3339, "2022-09-19T16:20:00Z")
 
 	testCases := map[string]struct {
-		templateRenderer template.TemplateRenderer
+		templateRenderer template.Renderer
 		expectedError    error
 		expected         string
 	}{
 		"returns path for single template": {
-			templateRenderer: template.TemplateRenderer{
+			templateRenderer: template.Renderer{
 				Config: config.Config{
 					Directory: "/home/username/notes",
 				},
@@ -86,7 +86,7 @@ func TestOutputPath(t *testing.T) {
 			expected:      "/home/username/notes/magic/simple.md",
 		},
 		"creates full nested dir path when there are subtemplates": {
-			templateRenderer: template.TemplateRenderer{
+			templateRenderer: template.Renderer{
 				Config: config.Config{
 					Directory: "/home/username/notes",
 				},
@@ -110,7 +110,7 @@ func TestOutputPath(t *testing.T) {
 			expected:      "/home/username/notes/foo/bar/wow/nested-example.md",
 		},
 		"prompts user for directory input when specified in template config": {
-			templateRenderer: template.TemplateRenderer{
+			templateRenderer: template.Renderer{
 				Config: config.Config{
 					Directory: "/home/username/notes",
 				},
@@ -129,7 +129,7 @@ func TestOutputPath(t *testing.T) {
 			expected:      "/home/username/notes/foo/dir/simple.md",
 		},
 		"prompts user to select directory when specified in config": {
-			templateRenderer: template.TemplateRenderer{
+			templateRenderer: template.Renderer{
 				Config: config.Config{
 					Directory: "/home/username/notes",
 				},
@@ -148,7 +148,7 @@ func TestOutputPath(t *testing.T) {
 			expected:      "/home/username/notes/foo-dir/works.md",
 		},
 		"adds year to path": {
-			templateRenderer: template.TemplateRenderer{
+			templateRenderer: template.Renderer{
 				Config: config.Config{
 					Directory: "/home/username/notes",
 				},
@@ -185,13 +185,13 @@ func TestRender(t *testing.T) {
 	testTime, _ := time.Parse(time.RFC3339, "2022-09-19T16:20:00Z")
 
 	testCases := map[string]struct {
-		renderer        template.TemplateRenderer
+		renderer        template.Renderer
 		templateContent string
 		expected        string
 		expectedError   error
 	}{
 		"expands expected variables": {
-			renderer: template.TemplateRenderer{
+			renderer: template.Renderer{
 				Config: config.Config{
 					Templates: map[string]config.Template{},
 				},
