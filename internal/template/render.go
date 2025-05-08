@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
-	"text/template"
+	goTemplate "text/template"
 	"time"
 
 	"github.com/tx3stn/pkb/internal/config"
@@ -152,7 +152,13 @@ func (t *Renderer) Render(content string, writer io.Writer, templatePath string)
 		}
 	}
 
-	tpl, err := template.New("template").Parse(content)
+	tpl, err := goTemplate.New("template").
+		Funcs(goTemplate.FuncMap{
+			"date":  func() string { return config.Date },
+			"time":  func() string { return config.Time },
+			"title": func() string { return config.Name },
+		}).
+		Parse(content)
 	if err != nil {
 		return fmt.Errorf("error parsing template: %w", err)
 	}

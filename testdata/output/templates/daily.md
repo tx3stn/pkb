@@ -1,6 +1,10 @@
 # {{.CustomDateFormat}}
 
-## Focus on
+## Obsidian Built In Variables
+
+{{date}}
+{{time}}
+{{title}}
 
 ## TODO
 
