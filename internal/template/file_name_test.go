@@ -1,10 +1,10 @@
-package create_test
+package template_test
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/tx3stn/pkb/internal/create"
+	"github.com/tx3stn/pkb/internal/template"
 )
 
 func TestSanitiseFileName(t *testing.T) {
@@ -42,7 +42,7 @@ func TestSanitiseFileName(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			actual := create.SanitiseFileName(tc.input)
+			actual := template.SanitiseFileName(tc.input)
 			assert.Equal(t, tc.expected, actual)
 		})
 	}

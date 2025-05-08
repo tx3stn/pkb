@@ -20,6 +20,7 @@ knowledge base.
   - [Custom file name formats](#custom-file-name-formats)
   - [Selecting an output directory](#selecting-an-output-directory)
 - [Using with Obsidian](#using-with-obsidian)
+  - [Expanding Obsidian Template Variables](#expanding-obsidian-template-variables)
 
 ## Why?
 
@@ -93,8 +94,6 @@ need to share them somewhere for other people to read.
 
 ![pkb-copy-demo](https://user-images.githubusercontent.com/14163530/197569321-92c11700-7c43-4050-9e5b-123a1e8d38cf.gif)
 
-**Coming soon:** even more things to simplify your knowledge base management.
-
 ## Configuration
 
 Config driven means **you** control how `pkb` works with the options in a
@@ -127,6 +126,9 @@ separated list if multiple are selected.
 - `{{.Time}}` - the time the file was created in the format HH:MM.
 - `{{.Week}}` - the current week number.
 - `{{.Year}}` - the current year.
+
+See [Expanding Obsidian Template Variables](#expanding-obsidian-template-variables)
+for details on using the default Obsidian template values.
 
 ### Custom file name formats
 
@@ -175,3 +177,17 @@ You can make sure `Obsidian` is using the same location by going to
 `Settings > Templates` and setting the `Template folder location` value.
 
 ![Template folder location](https://user-images.githubusercontent.com/14163530/197546420-02c0c607-93db-454b-9d38-743e23a879f3.png)
+
+### Expanding Obsidian Template Variables
+
+For ease of compatibility `pkb` can expand [the default Obsidian template values](https://help.obsidian.md/plugins/templates).
+
+- `{{date}}` - today's date (in the format `YYYY-MM-DD`).
+- `{{time}}` - the current time (in the format `HH:mm`).
+- `{{title}}` - the title of the created note.
+
+It does **not** currently support the MomentJS format tokens you can specify to
+customise the `date` and `time` values, as the syntax for this breaks the standard
+go template syntax used by `pkb`, so the templates would need to be pre-processed
+before they are rendered. This *may* be implemented in a future update, so if it's
+something you would like to see please create an issue requesting it.
