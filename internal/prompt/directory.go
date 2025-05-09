@@ -48,13 +48,16 @@ func (d DirectorySelector) Select(parent string) (string, error) {
 func selectDirectory(subDirectories []string) (string, error) {
 	var selected string
 
-	if err := huh.NewSelect[string]().
+	prompt := huh.NewSelect[string]().
 		Options(huh.NewOptions(subDirectories...)...).
 		Title("select directory:").
-		Value(&selected).
-		Run(); err != nil {
+		Value(&selected)
+
+	if err := prompt.Run(); err != nil {
 		return "", fmt.Errorf("%w: %w", ErrSelectingDirectory, err)
 	}
+
+	fmt.Println(prompt.View())
 
 	return selected, nil
 }

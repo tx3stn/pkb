@@ -75,13 +75,16 @@ func (t TemplateSelector) SelectTemplateWithSubTemplates(
 func selectTemplate(templates []string) (string, error) {
 	var selected string
 
-	if err := huh.NewSelect[string]().
+	prompt := huh.NewSelect[string]().
 		Options(huh.NewOptions(templates...)...).
 		Title("select template:").
-		Value(&selected).
-		Run(); err != nil {
+		Value(&selected)
+
+	if err := prompt.Run(); err != nil {
 		return "", fmt.Errorf("%w: %w", ErrSelectingTemplate, err)
 	}
+
+	fmt.Println(prompt.View())
 
 	return selected, nil
 }

@@ -22,12 +22,15 @@ func EnterFileName() (string, error) {
 func userPrompt(promptString string) (string, error) {
 	result := ""
 
-	if err := huh.NewInput().
+	prompt := huh.NewInput().
 		Title(promptString).
-		Value(&result).
-		Run(); err != nil {
+		Value(&result)
+
+	if err := prompt.Run(); err != nil {
 		return "", fmt.Errorf("%w: %w", ErrSelectingTemplate, err)
 	}
+
+	fmt.Println(prompt.View())
 
 	return result, nil
 }

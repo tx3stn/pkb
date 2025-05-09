@@ -54,13 +54,16 @@ func (o OptsFromFileSelector) Select(jsonPath string) ([]string, error) {
 func selectFromOptions(opts []string, fileName string) ([]string, error) {
 	var selected []string
 
-	if err := huh.NewMultiSelect[string]().
+	prompt := huh.NewMultiSelect[string]().
 		Options(huh.NewOptions(opts...)...).
 		Title(fmt.Sprintf("select from %s:", fileName)).
-		Value(&selected).
-		Run(); err != nil {
+		Value(&selected)
+
+	if err := prompt.Run(); err != nil {
 		return []string{}, fmt.Errorf("error selecting options from template: %w", err)
 	}
+
+	fmt.Println(prompt.View())
 
 	return selected, nil
 }

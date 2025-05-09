@@ -43,13 +43,16 @@ func (f FileSelector) SelectFromDir(searchDir string) (string, error) {
 func selectFile(filesInDir []string) (string, error) {
 	var selected string
 
-	if err := huh.NewSelect[string]().
+	prompt := huh.NewSelect[string]().
 		Options(huh.NewOptions(filesInDir...)...).
 		Title("select file:").
-		Value(&selected).
-		Run(); err != nil {
+		Value(&selected)
+
+	if err := prompt.Run(); err != nil {
 		return "", fmt.Errorf("%w: %w", ErrSelectingFile, err)
 	}
+
+	fmt.Println(prompt.View())
 
 	return selected, nil
 }
