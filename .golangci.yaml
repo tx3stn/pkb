@@ -9,6 +9,7 @@ linters:
     - godox  # TODO statements are useful and shouldn't make a linter error.
     - exhaustruct  # more annoying than useful.
     - tagliatelle  # config format is snake case not camel.
+    - forbidigo
   exclusions:
     rules:
       - path: 'internal\/flags\/vars\.go'

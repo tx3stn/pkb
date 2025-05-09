@@ -9,30 +9,30 @@ import (
 	"github.com/tx3stn/pkb/internal/prompt"
 )
 
-func TestSelectFromDir(t *testing.T) {
+func TestDirectorySelect(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
-		inputDir      string
-		selectFunc    prompt.FileSelectorFunc
+		parentDir     string
+		selectFunc    prompt.DirectorySelectorFunc
 		expected      string
 		expectedError error
 	}{
-		"returns selected file from directory": {
-			inputDir: "./testdata",
+		"returns selected options": {
+			parentDir: "./testdata",
 			selectFunc: func(input []string) (string, error) {
-				return "example.json", nil
+				return "bar", nil
 			},
-			expected:      "example.json",
+			expected:      "bar",
 			expectedError: nil,
 		},
 		"returns error when the directory doesn't exist": {
-			inputDir: "./testdata/baz",
+			parentDir: "./error",
 			selectFunc: func(input []string) (string, error) {
 				return "", nil
 			},
 			expected:      "",
-			expectedError: prompt.ErrGettingFilesInDirectory,
+			expectedError: prompt.ErrGettingSubDirectories,
 		},
 	}
 
@@ -42,9 +42,9 @@ func TestSelectFromDir(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			selector := prompt.FileSelector{SelectFunc: tc.selectFunc}
+			selector := prompt.DirectorySelector{SelectFunc: tc.selectFunc}
 
-			actual, err := selector.SelectFromDir(tc.inputDir)
+			actual, err := selector.Select(tc.parentDir)
 			require.ErrorIs(t, err, tc.expectedError)
 			assert.Equal(t, tc.expected, actual)
 		})

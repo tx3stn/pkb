@@ -5,12 +5,13 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
-	"github.com/AlecAivazis/survey/v2"
+	"github.com/charmbracelet/huh"
 )
 
 // FromFileSelectorFunc is the type def for the selector func used in the TemplateSelector struct.
-type FromFileSelectorFunc func([]string) ([]string, error)
+type FromFileSelectorFunc func([]string, string) ([]string, error)
 
 // OptsFromFileSelector is a utility struct to enable mocking of calls to the survey
 // prompt for easier testability.
@@ -21,30 +22,8 @@ type OptsFromFileSelector struct {
 // NewOptsFromFileSelector creates a new instance of the file selector.
 func NewOptsFromFileSelector() OptsFromFileSelector {
 	return OptsFromFileSelector{
-		SelectFunc: SelectFromOpts,
+		SelectFunc: selectFromOptions,
 	}
-}
-
-// SelectFromOpts prompts the user to pick multiple options from the values provided
-// by the template.
-func SelectFromOpts(opts []string) ([]string, error) {
-	answer := struct {
-		Selected []string `survey:"opts"`
-	}{}
-
-	if err := survey.Ask([]*survey.Question{
-		{
-			Name: "opts",
-			Prompt: &survey.MultiSelect{
-				Message: "selecting from options defined in file:",
-				Options: opts,
-			},
-		},
-	}, &answer); err != nil {
-		return []string{}, fmt.Errorf("error selecting options from template: %w", err)
-	}
-
-	return answer.Selected, nil
 }
 
 // Select reads the provided JSON file, and provides the options
@@ -60,10 +39,31 @@ func (o OptsFromFileSelector) Select(jsonPath string) ([]string, error) {
 		return []string{}, fmt.Errorf("%w: %w", ErrInvalidOptionsFile, err)
 	}
 
-	selected, err := o.SelectFunc(values)
+	selected, err := o.SelectFunc(
+		values,
+		strings.TrimSuffix(filepath.Base(jsonPath), filepath.Ext(jsonPath)),
+	)
 	if err != nil {
 		return []string{}, err
 	}
+
+	return selected, nil
+}
+
+// selectFromOptions prompts the user to select multiple values from the template provided.
+func selectFromOptions(opts []string, fileName string) ([]string, error) {
+	var selected []string
+
+	prompt := huh.NewMultiSelect[string]().
+		Options(huh.NewOptions(opts...)...).
+		Title(fmt.Sprintf("select from %s:", fileName)).
+		Value(&selected)
+
+	if err := prompt.Run(); err != nil {
+		return []string{}, fmt.Errorf("error selecting options from template: %w", err)
+	}
+
+	fmt.Println(strings.ReplaceAll(prompt.View(), "\n", ""))
 
 	return selected, nil
 }

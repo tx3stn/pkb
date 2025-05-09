@@ -3,31 +3,35 @@ package prompt
 
 import (
 	"fmt"
+	"strings"
 
-	"github.com/AlecAivazis/survey/v2"
+	"github.com/charmbracelet/huh"
 )
 
 // EnterDirectory prompts the user to enter the name of the directory they want
 // to save the created template in.
 func EnterDirectory() (string, error) {
-	return userPrompt("directory name")
+	return userPrompt("enter directory name:")
 }
 
 // EnterFileName prompts the user to enter the name of the file they are going
 // to save a template as, and returns a sanitised.
 func EnterFileName() (string, error) {
-	return userPrompt("file name")
+	return userPrompt("enter file name:")
 }
 
-func userPrompt(inputType string) (string, error) {
-	name := ""
-	prompt := &survey.Input{
-		Message: fmt.Sprintf("enter %s:", inputType),
+func userPrompt(promptString string) (string, error) {
+	result := ""
+
+	prompt := huh.NewInput().
+		Title(promptString).
+		Value(&result)
+
+	if err := prompt.Run(); err != nil {
+		return "", fmt.Errorf("%w: %w", ErrSelectingTemplate, err)
 	}
 
-	if err := survey.AskOne(prompt, &name); err != nil {
-		return "", fmt.Errorf("error prompting for user input: %w", err)
-	}
+	fmt.Println(strings.ReplaceAll(prompt.View(), "\n", ""))
 
-	return name, nil
+	return result, nil
 }

@@ -16,6 +16,15 @@ const (
 	ErrReadingOptionsFile
 	// ErrInvalidOptionsFile is the error returned when the options file is not valid JSON.
 	ErrInvalidOptionsFile
+	// ErrGettingSubDirectories is the error returned when something goes wrong getting
+	// the subdirectories of a specified directory.
+	ErrGettingSubDirectories
+	// ErrSelectingDirectory is the error returned when something goes wrong selecting
+	// a directory.
+	ErrSelectingDirectory
+	// ErrSelectingFile is the error returned when something goes wrong selecting
+	// a file.
+	ErrSelectingFile
 )
 
 // Error returns the message string for the given error.
@@ -35,6 +44,15 @@ func (e Error) Error() string {
 
 	case ErrInvalidOptionsFile:
 		return "error unmarshalling options file to json"
+
+	case ErrGettingSubDirectories:
+		return "error getting subdirectories"
+
+	case ErrSelectingDirectory:
+		return "error selecting directory"
+
+	case ErrSelectingFile:
+		return "error selecting file"
 
 	default:
 		return "unknown error"
