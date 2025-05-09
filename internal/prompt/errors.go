@@ -51,6 +51,9 @@ func (e Error) Error() string {
 	case ErrSelectingDirectory:
 		return "error selecting directory"
 
+	case ErrSelectingFile:
+		return "error selecting file"
+
 	default:
 		return "unknown error"
 	}
