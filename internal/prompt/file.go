@@ -2,6 +2,7 @@ package prompt
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/charmbracelet/huh"
 	"github.com/tx3stn/pkb/internal/dir"
@@ -52,7 +53,7 @@ func selectFile(filesInDir []string) (string, error) {
 		return "", fmt.Errorf("%w: %w", ErrSelectingFile, err)
 	}
 
-	fmt.Println(prompt.View())
+	fmt.Println(strings.ReplaceAll(prompt.View(), "\n", ""))
 
 	return selected, nil
 }

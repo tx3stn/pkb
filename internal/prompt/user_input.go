@@ -3,6 +3,7 @@ package prompt
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/charmbracelet/huh"
 )
@@ -30,7 +31,7 @@ func userPrompt(promptString string) (string, error) {
 		return "", fmt.Errorf("%w: %w", ErrSelectingTemplate, err)
 	}
 
-	fmt.Println(prompt.View())
+	fmt.Println(strings.ReplaceAll(prompt.View(), "\n", ""))
 
 	return result, nil
 }

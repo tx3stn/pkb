@@ -63,7 +63,7 @@ func selectFromOptions(opts []string, fileName string) ([]string, error) {
 		return []string{}, fmt.Errorf("error selecting options from template: %w", err)
 	}
 
-	fmt.Println(prompt.View())
+	fmt.Println(strings.ReplaceAll(prompt.View(), "\n", ""))
 
 	return selected, nil
 }

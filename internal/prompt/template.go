@@ -5,6 +5,7 @@ import (
 	"maps"
 	"slices"
 	"sort"
+	"strings"
 
 	"github.com/charmbracelet/huh"
 	"github.com/tx3stn/pkb/internal/config"
@@ -84,7 +85,7 @@ func selectTemplate(templates []string) (string, error) {
 		return "", fmt.Errorf("%w: %w", ErrSelectingTemplate, err)
 	}
 
-	fmt.Println(prompt.View())
+	fmt.Println(strings.ReplaceAll(prompt.View(), "\n", ""))
 
 	return selected, nil
 }

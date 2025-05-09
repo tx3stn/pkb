@@ -3,6 +3,7 @@ package prompt
 import (
 	"fmt"
 	"sort"
+	"strings"
 
 	"github.com/charmbracelet/huh"
 	"github.com/tx3stn/pkb/internal/dir"
@@ -57,7 +58,7 @@ func selectDirectory(subDirectories []string) (string, error) {
 		return "", fmt.Errorf("%w: %w", ErrSelectingDirectory, err)
 	}
 
-	fmt.Println(prompt.View())
+	fmt.Println(strings.ReplaceAll(prompt.View(), "\n", ""))
 
 	return selected, nil
 }
