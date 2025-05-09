@@ -4,7 +4,6 @@ package template
 import (
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -78,7 +77,8 @@ func (t *Renderer) CreateAndSaveFile() (string, error) {
 
 	defer func() {
 		if err := file.Close(); err != nil {
-			log.Fatalf("error closing created file: %s", err)
+			fmt.Printf("error closing created file: %s", err)
+			os.Exit(1)
 		}
 	}()
 
@@ -86,7 +86,7 @@ func (t *Renderer) CreateAndSaveFile() (string, error) {
 		return "", err
 	}
 
-	log.Printf("file created: %s\n", outputPath)
+	fmt.Printf("file created: %s\n", outputPath)
 
 	return outputPath, nil
 }
