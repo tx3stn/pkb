@@ -6,23 +6,23 @@ import (
 	"slices"
 	"sort"
 
-	"github.com/AlecAivazis/survey/v2"
+	"github.com/charmbracelet/huh"
 	"github.com/tx3stn/pkb/internal/config"
 )
 
-// SelectorFunc is the type def for the selector func used in the TemplateSelector struct.
-type SelectorFunc func(config.Templates) (config.Template, error)
+// TemplateSelectorFunc is the type def for the selector func used in the TemplateSelector struct.
+type TemplateSelectorFunc func([]string) (string, error)
 
 // TemplateSelector is a utility struct to enable mocking of calls to the
 // survey prompt for easier testability.
 type TemplateSelector struct {
-	SelectFunc SelectorFunc
+	SelectFunc TemplateSelectorFunc
 }
 
 // NewTemplateSelector creates a new instance of the TemplateSelector struct.
 func NewTemplateSelector() TemplateSelector {
 	return TemplateSelector{
-		SelectFunc: SelectTemplate,
+		SelectFunc: selectTemplate,
 	}
 }
 
@@ -33,6 +33,8 @@ func (t TemplateSelector) SelectTemplateWithSubTemplates(
 	templates config.Templates,
 	selectedTemplates []config.Template,
 ) ([]config.Template, error) {
+	var selected config.Template
+
 	// If there is only one sub template use that by default, so the user is not
 	// given a prompt with only a single value.
 	selected, err := templates.First()
@@ -44,9 +46,19 @@ func (t TemplateSelector) SelectTemplateWithSubTemplates(
 	if len(templates) > 1 {
 		var err error
 
-		selected, err = t.SelectFunc(templates)
+		var ok bool
+
+		templateList := slices.AppendSeq(make([]string, 0, len(templates)), maps.Keys(templates))
+		sort.Strings(templateList)
+
+		selectedName, err := t.SelectFunc(templateList)
 		if err != nil {
 			return []config.Template{}, err
+		}
+
+		selected, ok = templates[selectedName]
+		if !ok {
+			return []config.Template{}, fmt.Errorf("%w %s", ErrNoTemplateWithName, selectedName)
 		}
 	}
 
@@ -59,30 +71,27 @@ func (t TemplateSelector) SelectTemplateWithSubTemplates(
 	return t.SelectTemplateWithSubTemplates(selected.SubTemplates, selectedTemplates)
 }
 
-// SelectTemplate prompts the user to select a template from the ones defined in config.
-func SelectTemplate(templates config.Templates) (config.Template, error) {
-	answer := struct {
-		Selected string `survey:"template"`
-	}{}
+// selectTemplate prompts the user to select a template from the ones defined in config.
+func selectTemplate(templates []string) (string, error) {
+	huhOpts := make([]huh.Option[string], len(templates))
 
-	templateList := slices.AppendSeq(make([]string, 0, len(templates)), maps.Keys(templates))
-	sort.Strings(templateList)
-
-	if err := survey.Ask([]*survey.Question{
-		{
-			Name: "template",
-			Prompt: &survey.Select{
-				Message: "select template:",
-				Options: templateList,
-			},
-		},
-	}, &answer); err != nil {
-		return config.Template{}, fmt.Errorf("%w: %w", ErrSelectingTemplate, err)
+	for i, v := range templates {
+		huhOpts[i] = huh.NewOption(v, v)
 	}
 
-	selected, ok := templates[answer.Selected]
-	if !ok {
-		return config.Template{}, fmt.Errorf("%w %s", ErrNoTemplateWithName, answer.Selected)
+	var selected string
+
+	form := huh.NewForm(
+		huh.NewGroup(
+			huh.NewSelect[string]().
+				Options(huhOpts...).
+				Title("select template:").
+				Value(&selected),
+		),
+	)
+
+	if err := form.Run(); err != nil {
+		return "", fmt.Errorf("%w: %w", ErrSelectingTemplate, err)
 	}
 
 	return selected, nil

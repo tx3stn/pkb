@@ -3,7 +3,7 @@ package prompt
 import (
 	"fmt"
 
-	"github.com/AlecAivazis/survey/v2"
+	"github.com/charmbracelet/huh"
 	"github.com/tx3stn/pkb/internal/dir"
 )
 
@@ -19,7 +19,7 @@ type FileSelector struct {
 // NewFileSelector creates a new instance of the file selector.
 func NewFileSelector() FileSelector {
 	return FileSelector{
-		SelectFunc: SelectFile,
+		SelectFunc: selectFile,
 	}
 }
 
@@ -38,24 +38,29 @@ func (f FileSelector) SelectFromDir(searchDir string) (string, error) {
 	return selected, nil
 }
 
-// SelectFile prompts the user to select a file and returns the
+// selectFile prompts the user to select a file and returns the
 // full path of the selected file.
-func SelectFile(filesInDir []string) (string, error) {
-	answer := struct {
-		Selected string `survey:"file"`
-	}{}
+func selectFile(filesInDir []string) (string, error) {
+	huhOpts := make([]huh.Option[string], len(filesInDir))
 
-	if err := survey.Ask([]*survey.Question{
-		{
-			Name: "file",
-			Prompt: &survey.Select{
-				Message: "select existing file:",
-				Options: filesInDir,
-			},
-		},
-	}, &answer); err != nil {
-		return "", fmt.Errorf("error selecting existing file: %w", err)
+	for i, v := range filesInDir {
+		huhOpts[i] = huh.NewOption(v, v)
 	}
 
-	return answer.Selected, nil
+	var selected string
+
+	form := huh.NewForm(
+		huh.NewGroup(
+			huh.NewSelect[string]().
+				Options(huhOpts...).
+				Title("select file:").
+				Value(&selected),
+		),
+	)
+
+	if err := form.Run(); err != nil {
+		return "", fmt.Errorf("%w: %w", ErrSelectingFile, err)
+	}
+
+	return selected, nil
 }

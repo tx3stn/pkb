@@ -16,22 +16,22 @@ func TestSelectTemplateWithSubTemplates(t *testing.T) {
 	errorPickingTemplate := errors.New("error picking template")
 
 	testCases := map[string]struct {
-		selectorFunc  prompt.SelectorFunc
+		selectorFunc  prompt.TemplateSelectorFunc
 		input         config.Templates
 		expected      []config.Template
 		expectedError error
 	}{
 		"returns single template with no sub templates": {
-			selectorFunc: func(templates config.Templates) (config.Template, error) {
-				return templates["foo"], nil
+			selectorFunc: func(templates []string) (string, error) {
+				return "foo", nil
 			},
 			input:         config.Templates{"foo": {File: "foo.tpl.md"}},
 			expected:      []config.Template{{File: "foo.tpl.md"}},
 			expectedError: nil,
 		},
 		"returns multiple templates when you have nested sub templates": {
-			selectorFunc: func(templates config.Templates) (config.Template, error) {
-				return templates["bar"], nil
+			selectorFunc: func(templates []string) (string, error) {
+				return "bar", nil
 			},
 			input: config.Templates{
 				"bar": {
@@ -83,8 +83,8 @@ func TestSelectTemplateWithSubTemplates(t *testing.T) {
 			expectedError: nil,
 		},
 		"returns error when select errors": {
-			selectorFunc: func(templates config.Templates) (config.Template, error) {
-				return config.Template{}, errorPickingTemplate
+			selectorFunc: func(templates []string) (string, error) {
+				return "", errorPickingTemplate
 			},
 			input: config.Templates{
 				"foo": {File: "foo.tpl.md"},

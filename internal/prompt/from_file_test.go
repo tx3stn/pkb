@@ -19,7 +19,7 @@ func TestSelect(t *testing.T) {
 	}{
 		"returns selected options from file": {
 			inputFile: "./testdata/example.json",
-			selectFunc: func(input []string) ([]string, error) {
+			selectFunc: func(input []string, title string) ([]string, error) {
 				return []string{"foo", "bar"}, nil
 			},
 			expected:      []string{"foo", "bar"},
@@ -27,7 +27,7 @@ func TestSelect(t *testing.T) {
 		},
 		"returns error when the file doesn't exist": {
 			inputFile: "./testdata/foo.json",
-			selectFunc: func(input []string) ([]string, error) {
+			selectFunc: func(input []string, title string) ([]string, error) {
 				return []string{}, nil
 			},
 			expected:      []string{},
@@ -35,7 +35,7 @@ func TestSelect(t *testing.T) {
 		},
 		"returns error when the file isn't valid json": {
 			inputFile: "./testdata/invalid.json",
-			selectFunc: func(input []string) ([]string, error) {
+			selectFunc: func(input []string, title string) ([]string, error) {
 				return []string{}, nil
 			},
 			expected:      []string{},

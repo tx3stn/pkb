@@ -22,6 +22,9 @@ const (
 	// ErrSelectingDirectory is the error returned when something goes wrong selecting
 	// a directory.
 	ErrSelectingDirectory
+	// ErrSelectingFile is the error returned when something goes wrong selecting
+	// a file.
+	ErrSelectingFile
 )
 
 // Error returns the message string for the given error.
