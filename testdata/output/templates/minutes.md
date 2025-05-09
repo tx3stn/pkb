@@ -1,7 +1,7 @@
 # Meeting miutes
 
 Date: {{.Date}} {{.Time}}
-Attendees: {{.SelectFromList "team.json" }}
+Attendees: {{.SelectFromList "attendees.json" }}
 
 ## Context
 

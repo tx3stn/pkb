@@ -20,4 +20,4 @@ jobs:
       - name: build binary
         run: make build
       - name: test
-        run: ./scripts/run-tests-with-summary.sh > "$GITHUB_STEP_SUMMARY"
+        run: ./.scripts/run-tests-with-summary.sh > "$GITHUB_STEP_SUMMARY"

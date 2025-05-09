@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 
@@ -37,7 +36,7 @@ func CreateCopy() *cobra.Command {
 				return fmt.Errorf("error copying to clibboard: %w", err)
 			}
 
-			log.Printf("copied %s contents to clipboard", selected)
+			fmt.Printf("copied %s contents to clipboard\n", selected)
 
 			return nil
 		},

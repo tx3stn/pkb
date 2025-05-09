@@ -2,7 +2,7 @@
 package cmd
 
 import (
-	"log"
+	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -41,7 +41,7 @@ func init() {
 		StringVar(&flags.ConfigFile, "config", "", "config file if not held at default location")
 
 	if err := viper.BindPFlag("config", rootCmd.PersistentFlags().Lookup("config")); err != nil {
-		log.Printf("error binding --config flag: %s", err)
+		fmt.Printf("error binding --config flag: %s", err)
 		os.Exit(1)
 	}
 }
@@ -57,7 +57,7 @@ func initConfig() {
 	}
 
 	if err := viper.ReadInConfig(); err != nil {
-		log.Printf("error trying to read config file: %s", err)
+		fmt.Printf("error trying to read config file: %s", err)
 		os.Exit(1)
 	}
 }

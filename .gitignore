@@ -2,5 +2,6 @@
 !**/notes/
 coverage.out
 _null-ls*
-test/output/**/*.md
-!test/output/**/*.tpl.md
+testdata/output/**/*.md
+!testdata/output/templates/*.md
+*.gif

@@ -5,7 +5,7 @@
 Config driven CLI to manage the notes and documents that make up your personal
 knowledge base.
 
-![pkb-demo](https://user-images.githubusercontent.com/14163530/197567638-f6909de6-833c-4854-8c12-bab9c639739a.gif)
+![pkb-demo](https://github.com/user-attachments/assets/cf8a37b4-d74d-426e-923e-abd782c96a66)
 
 ## Contents
 
@@ -74,7 +74,7 @@ then the file will be opened in the editor specified in your config file.
 Don't want to edit it right now? Just use `--no-edit`. The file will still be
 created, just not opened.
 
-![pkb-new-demo](https://user-images.githubusercontent.com/14163530/197568150-a6cea17a-18e2-4b78-aa0d-4b8939c141b6.gif)
+![pkb-new-demo](https://github.com/user-attachments/assets/63cce0d5-726f-4903-addf-dc0c254b2c08)
 
 ### `edit`
 
@@ -83,7 +83,7 @@ Open your editor in your notes directory.
 Want to pick a specific file through `pkb` rather than in your editor? Use the
 `--pick` flag to select the specific file then open it for editing.
 
-![pkb-edit-demo](https://user-images.githubusercontent.com/14163530/197568755-bff18878-dfb4-4423-8db1-7c42e00333b5.gif)
+![pkb-edit-demo](https://github.com/user-attachments/assets/3df30ab5-704b-4c54-88d4-f2a053c070fb)
 
 ### `copy`
 

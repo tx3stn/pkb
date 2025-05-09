@@ -1,10 +1,4 @@
-# {{.CustomDateFormat}}
-
-## Obsidian Built In Variables
-
-{{date}}
-{{time}}
-{{title}}
+ {{.CustomDateFormat}}
 
 ## TODO
 
