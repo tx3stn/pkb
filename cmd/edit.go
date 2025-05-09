@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
 	"github.com/tx3stn/pkb/internal/config"
@@ -26,7 +27,12 @@ func CreateEdit() *cobra.Command {
 					return fmt.Errorf("error selecting file: %w", err)
 				}
 
-				if err := editor.OpenFile(conf.Editor, conf.Directory, file); err != nil {
+				absPath, err := filepath.Abs(file)
+				if err != nil {
+					return fmt.Errorf("error creating absolute path for file: %w", err)
+				}
+
+				if err := editor.OpenFile(conf.Editor, conf.Directory, absPath); err != nil {
 					return fmt.Errorf("error opening file in editor: %w", err)
 				}
 
