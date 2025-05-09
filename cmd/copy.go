@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/aymanbagabas/go-osc52"
+	"github.com/aymanbagabas/go-osc52/v2"
 	"github.com/spf13/cobra"
 	"github.com/tx3stn/pkb/internal/config"
 	"github.com/tx3stn/pkb/internal/prompt"
@@ -33,7 +33,10 @@ func CreateCopy() *cobra.Command {
 				return fmt.Errorf("error reading file: %w", err)
 			}
 
-			osc52.Copy(string(content))
+			if _, err := osc52.New(string(content)).WriteTo(os.Stderr); err != nil {
+				return fmt.Errorf("error copying to clibboard: %w", err)
+			}
+
 			log.Printf("copied %s contents to clipboard", selected)
 
 			return nil
