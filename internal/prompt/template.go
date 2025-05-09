@@ -73,24 +73,13 @@ func (t TemplateSelector) SelectTemplateWithSubTemplates(
 
 // selectTemplate prompts the user to select a template from the ones defined in config.
 func selectTemplate(templates []string) (string, error) {
-	huhOpts := make([]huh.Option[string], len(templates))
-
-	for i, v := range templates {
-		huhOpts[i] = huh.NewOption(v, v)
-	}
-
 	var selected string
 
-	form := huh.NewForm(
-		huh.NewGroup(
-			huh.NewSelect[string]().
-				Options(huhOpts...).
-				Title("select template:").
-				Value(&selected),
-		),
-	)
-
-	if err := form.Run(); err != nil {
+	if err := huh.NewSelect[string]().
+		Options(huh.NewOptions(templates...)...).
+		Title("select template:").
+		Value(&selected).
+		Run(); err != nil {
 		return "", fmt.Errorf("%w: %w", ErrSelectingTemplate, err)
 	}
 

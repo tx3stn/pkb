@@ -46,24 +46,13 @@ func (d DirectorySelector) Select(parent string) (string, error) {
 // parent. If the parent directory does not have any subdirectories this will
 // error.
 func selectDirectory(subDirectories []string) (string, error) {
-	huhOpts := make([]huh.Option[string], len(subDirectories))
-
-	for i, v := range subDirectories {
-		huhOpts[i] = huh.NewOption(v, v)
-	}
-
 	var selected string
 
-	form := huh.NewForm(
-		huh.NewGroup(
-			huh.NewSelect[string]().
-				Options(huhOpts...).
-				Title("select directory:").
-				Value(&selected),
-		),
-	)
-
-	if err := form.Run(); err != nil {
+	if err := huh.NewSelect[string]().
+		Options(huh.NewOptions(subDirectories...)...).
+		Title("select directory:").
+		Value(&selected).
+		Run(); err != nil {
 		return "", fmt.Errorf("%w: %w", ErrSelectingDirectory, err)
 	}
 

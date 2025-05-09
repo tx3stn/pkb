@@ -41,24 +41,13 @@ func (f FileSelector) SelectFromDir(searchDir string) (string, error) {
 // selectFile prompts the user to select a file and returns the
 // full path of the selected file.
 func selectFile(filesInDir []string) (string, error) {
-	huhOpts := make([]huh.Option[string], len(filesInDir))
-
-	for i, v := range filesInDir {
-		huhOpts[i] = huh.NewOption(v, v)
-	}
-
 	var selected string
 
-	form := huh.NewForm(
-		huh.NewGroup(
-			huh.NewSelect[string]().
-				Options(huhOpts...).
-				Title("select file:").
-				Value(&selected),
-		),
-	)
-
-	if err := form.Run(); err != nil {
+	if err := huh.NewSelect[string]().
+		Options(huh.NewOptions(filesInDir...)...).
+		Title("select file:").
+		Value(&selected).
+		Run(); err != nil {
 		return "", fmt.Errorf("%w: %w", ErrSelectingFile, err)
 	}
 

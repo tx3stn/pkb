@@ -52,24 +52,13 @@ func (o OptsFromFileSelector) Select(jsonPath string) ([]string, error) {
 
 // selectFromOptions prompts the user to select multiple values from the template provided.
 func selectFromOptions(opts []string, fileName string) ([]string, error) {
-	huhOpts := make([]huh.Option[string], len(opts))
-
-	for i, v := range opts {
-		huhOpts[i] = huh.NewOption(v, v)
-	}
-
 	var selected []string
 
-	form := huh.NewForm(
-		huh.NewGroup(
-			huh.NewMultiSelect[string]().
-				Options(huhOpts...).
-				Title(fmt.Sprintf("select from %s:", fileName)).
-				Value(&selected),
-		),
-	)
-
-	if err := form.Run(); err != nil {
+	if err := huh.NewMultiSelect[string]().
+		Options(huh.NewOptions(opts...)...).
+		Title(fmt.Sprintf("select from %s:", fileName)).
+		Value(&selected).
+		Run(); err != nil {
 		return []string{}, fmt.Errorf("error selecting options from template: %w", err)
 	}
 
