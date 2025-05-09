@@ -32,10 +32,12 @@ type Renderer struct {
 
 // NewRenderer creates a new instance of the TemplateRenderer.
 func NewRenderer(conf config.Config, templates []config.Template) Renderer {
+	dir := prompt.NewDirectorySelector()
+
 	return Renderer{
 		Config:          conf,
 		DirectoryPrompt: prompt.EnterDirectory,
-		DirectorySelect: prompt.SelectDirectory,
+		DirectorySelect: dir.Select,
 		NamePrompt:      prompt.EnterFileName,
 		Time:            time.Now(),
 		Templates:       templates,
