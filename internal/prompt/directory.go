@@ -29,7 +29,7 @@ func NewDirectorySelector() DirectorySelector {
 func (d DirectorySelector) Select(parent string) (string, error) {
 	subDirectories, err := dir.GetSubDirectories(parent)
 	if err != nil {
-		return "", fmt.Errorf("error getting sub directories: %w", err)
+		return "", fmt.Errorf("%w: %w", ErrGettingSubDirectories, err)
 	}
 
 	sort.Strings(subDirectories)
@@ -59,7 +59,7 @@ func SelectDirectory(subDirectories []string) (string, error) {
 			},
 		},
 	}, &answer); err != nil {
-		return "", fmt.Errorf("error selecting directory: %w", err)
+		return "", fmt.Errorf("%w: %w", ErrSelectingDirectory, err)
 	}
 
 	return answer.Selected, nil
