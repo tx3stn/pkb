@@ -50,6 +50,7 @@ func (o OptsFromFileSelector) Select(jsonPath string) ([]string, error) {
 	return selected, nil
 }
 
+// selectFromOptions prompts the user to select multiple values from the template provided.
 func selectFromOptions(opts []string, fileName string) ([]string, error) {
 	huhOpts := make([]huh.Option[string], len(opts))
 

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/AlecAivazis/survey/v2"
+	"github.com/charmbracelet/huh"
 	"github.com/tx3stn/pkb/internal/dir"
 )
 
@@ -21,7 +21,7 @@ type DirectorySelector struct {
 // NewDirectorySelector creates a new instance of the DirectorySelector.
 func NewDirectorySelector() DirectorySelector {
 	return DirectorySelector{
-		SelectFunc: SelectDirectory,
+		SelectFunc: selectDirectory,
 	}
 }
 
@@ -42,25 +42,30 @@ func (d DirectorySelector) Select(parent string) (string, error) {
 	return selected, nil
 }
 
-// SelectDirectory prompts the user to select a sub driectory in the provided
+// selectDirectory prompts the user to select a sub driectory in the provided
 // parent. If the parent directory does not have any subdirectories this will
 // error.
-func SelectDirectory(subDirectories []string) (string, error) {
-	answer := struct {
-		Selected string `survey:"directory"`
-	}{}
+func selectDirectory(subDirectories []string) (string, error) {
+	huhOpts := make([]huh.Option[string], len(subDirectories))
 
-	if err := survey.Ask([]*survey.Question{
-		{
-			Name: "directory",
-			Prompt: &survey.Select{
-				Message: "select directory:",
-				Options: subDirectories,
-			},
-		},
-	}, &answer); err != nil {
+	for i, v := range subDirectories {
+		huhOpts[i] = huh.NewOption(v, v)
+	}
+
+	var selected string
+
+	form := huh.NewForm(
+		huh.NewGroup(
+			huh.NewSelect[string]().
+				Options(huhOpts...).
+				Title("select directory:").
+				Value(&selected),
+		),
+	)
+
+	if err := form.Run(); err != nil {
 		return "", fmt.Errorf("%w: %w", ErrSelectingDirectory, err)
 	}
 
-	return answer.Selected, nil
+	return selected, nil
 }
