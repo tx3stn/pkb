@@ -27,7 +27,7 @@ func TestSelectFromDir(t *testing.T) {
 			expectedError: nil,
 		},
 		"returns error when the directory doesn't exist": {
-			inputDir: "./testdata/foo",
+			inputDir: "./testdata/baz",
 			selectFunc: func(input []string) (string, error) {
 				return "", nil
 			},
