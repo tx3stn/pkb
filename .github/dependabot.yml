@@ -5,9 +5,7 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    target-branch: dependabot-base
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
-    target-branch: dependabot-base
