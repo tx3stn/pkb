@@ -8,7 +8,11 @@ import (
 )
 
 // GetAllFilesInDirectory returns a slice of all of the files in a given directory.
-func GetAllFilesInDirectory(dir string) ([]string, error) {
+func GetAllFilesInDirectory(
+	dir string,
+	ignoreDirs []string,
+	ignoreFiles []string,
+) ([]string, error) {
 	filePaths := []string{}
 
 	if err := filepath.WalkDir(dir, func(path string, f fs.DirEntry, err error) error {
@@ -16,11 +20,11 @@ func GetAllFilesInDirectory(dir string) ([]string, error) {
 			return fmt.Errorf("%w: %s", ErrInvalidDirectoryPath, dir)
 		}
 
-		if f.IsDir() && slices.Contains(ignoreDirectories(), f.Name()) {
+		if f.IsDir() && slices.Contains(ignoreDirs, f.Name()) {
 			return filepath.SkipDir
 		}
 
-		if !f.IsDir() && !slices.Contains(ignoreFiles(), f.Name()) {
+		if !f.IsDir() && !slices.Contains(ignoreFiles, f.Name()) {
 			filePaths = append(filePaths, path)
 		}
 
@@ -30,13 +34,4 @@ func GetAllFilesInDirectory(dir string) ([]string, error) {
 	}
 
 	return filePaths, nil
-}
-
-// TODO: support defining these in config file.
-func ignoreDirectories() []string {
-	return []string{".git", ".obsidian"}
-}
-
-func ignoreFiles() []string {
-	return []string{".gitignore"}
 }
