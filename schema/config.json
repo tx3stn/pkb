@@ -75,6 +75,14 @@
 				"type": "object",
 				"$ref": "#/$defs/template"
 			}
+		},
+		"ignore_dirs": {
+			"description": "Directories to ignore when listing any files for selection.",
+			"type": "array"
+		},
+		"ignore_files": {
+			"description": "Files to ignore when listing any files for selection.",
+			"type": "array"
 		}
 	}
 }
