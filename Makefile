@@ -23,7 +23,7 @@ generate-gifs:
 
 .PHONY: install
 install: build
-	@sudo cp ./${BINARY_NAME} /usr/bin/${BINARY_NAME}
+	@sudo cp ./${BINARY_NAME} /usr/local/bin/${BINARY_NAME}
 
 .PHONY: lint
 lint:
@@ -40,4 +40,3 @@ schema-validate:
 .PHONY: test
 test:
 	@CGO_ENABLED=1 go test ${DIR} -race -cover
-
