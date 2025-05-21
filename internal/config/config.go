@@ -22,6 +22,8 @@ type (
 	Config struct {
 		Directory   string    `json:"directory"`
 		Editor      string    `json:"editor"`
+		IgnoreDirs  []string  `json:"ignore_dirs"`
+		IgnoreFiles []string  `json:"ignore_files"`
 		TemplateDir string    `json:"template_dir"`
 		Templates   Templates `json:"templates"`
 	}

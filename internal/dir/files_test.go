@@ -14,11 +14,15 @@ func TestGetAllFilesInDirectory(t *testing.T) {
 
 	testCases := map[string]struct {
 		inputDir      string
+		ignoreDirs    []string
+		ignoreFiles   []string
 		expectedError error
 		expected      []string
 	}{
 		"ReturnsAllFilesInDirectory": {
 			inputDir:      "no-ignores",
+			ignoreDirs:    []string{},
+			ignoreFiles:   []string{},
 			expectedError: nil,
 			expected: []string{
 				"testdata/no-ignores/sub/dir/one",
@@ -26,21 +30,36 @@ func TestGetAllFilesInDirectory(t *testing.T) {
 				"testdata/no-ignores/three",
 			},
 		},
-		"DoesNotReturnFilesIngnoredDirectory": {
+		"DoesNotReturnFilesInIgnoredDirectory": {
 			inputDir:      "ignores",
+			ignoreDirs:    []string{".obsidian"},
+			ignoreFiles:   []string{},
 			expectedError: nil,
 			expected: []string{
 				"testdata/ignores/foo",
 				"testdata/ignores/bar",
 			},
 		},
+		"DoesNotReturnIgnoredFiles": {
+			inputDir:      "ignores",
+			ignoreDirs:    []string{".obsidian"},
+			ignoreFiles:   []string{"bar"},
+			expectedError: nil,
+			expected: []string{
+				"testdata/ignores/foo",
+			},
+		},
 		"ReturnsEmptySliceForEmptyDirectory": {
 			inputDir:      "empty",
+			ignoreDirs:    []string{},
+			ignoreFiles:   []string{},
 			expectedError: nil,
 			expected:      []string{},
 		},
 		"ReturnsErrorForInvalidInputDirectory": {
 			inputDir:      "foo",
+			ignoreDirs:    []string{},
+			ignoreFiles:   []string{},
 			expectedError: dir.ErrInvalidDirectoryPath,
 			expected:      []string{},
 		},
@@ -52,7 +71,11 @@ func TestGetAllFilesInDirectory(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			actual, err := dir.GetAllFilesInDirectory(filepath.Join("testdata", tc.inputDir))
+			actual, err := dir.GetAllFilesInDirectory(
+				filepath.Join("testdata", tc.inputDir),
+				tc.ignoreDirs,
+				tc.ignoreFiles,
+			)
 			require.ErrorIs(t, err, tc.expectedError)
 			reflect.DeepEqual(tc.expected, actual)
 		})

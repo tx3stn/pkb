@@ -14,19 +14,23 @@ type FileSelectorFunc func([]string) (string, error)
 // FileSelector is a utility struct to enable mocking of calls to the survey
 // prompt for easier testability.
 type FileSelector struct {
-	SelectFunc FileSelectorFunc
+	SelectFunc  FileSelectorFunc
+	IgnoreDirs  []string
+	IgnoreFiles []string
 }
 
 // NewFileSelector creates a new instance of the file selector.
-func NewFileSelector() FileSelector {
+func NewFileSelector(ignoreDirs []string, ignoreFiles []string) FileSelector {
 	return FileSelector{
-		SelectFunc: selectFile,
+		SelectFunc:  selectFile,
+		IgnoreDirs:  ignoreDirs,
+		IgnoreFiles: ignoreFiles,
 	}
 }
 
 // SelectFromDir prompts the user to select a file from the provided parent directory.
 func (f FileSelector) SelectFromDir(searchDir string) (string, error) {
-	allPaths, err := dir.GetAllFilesInDirectory(searchDir)
+	allPaths, err := dir.GetAllFilesInDirectory(searchDir, f.IgnoreDirs, f.IgnoreFiles)
 	if err != nil {
 		return "", fmt.Errorf("%w: %w", ErrGettingFilesInDirectory, err)
 	}

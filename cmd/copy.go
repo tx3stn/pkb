@@ -21,7 +21,12 @@ func CreateCopy() *cobra.Command {
 				return fmt.Errorf("error getting directory from config: %w", err)
 			}
 
-			selector := prompt.NewFileSelector()
+			conf, err := config.Get()
+			if err != nil {
+				return fmt.Errorf("error getting config: %w", err)
+			}
+
+			selector := prompt.NewFileSelector(conf.IgnoreDirs, conf.IgnoreFiles)
 			selected, err := selector.SelectFromDir(dir)
 			if err != nil {
 				return fmt.Errorf("error selecting file: %w", err)
