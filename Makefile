@@ -19,7 +19,7 @@ generate-gifs:
 	@docker build --tag ${BINARY_NAME}-vhs:demo -f ./.docker/demo-gif.Dockerfile .
 	@$(vhs-docker) /vhs/.scripts/demo.tape
 	@$(vhs-docker) /vhs/.scripts/new-no-edit.tape
-	@$(vhs-docker) /vhs/.scripts/edit-pick.tape
+	@$(vhs-docker) /vhs/.scripts/edit.tape
 
 .PHONY: install
 install: build

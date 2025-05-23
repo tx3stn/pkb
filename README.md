@@ -5,7 +5,7 @@
 Config driven CLI to manage the notes and documents that make up your personal
 knowledge base.
 
-![pkb-demo](https://github.com/user-attachments/assets/cf8a37b4-d74d-426e-923e-abd782c96a66)
+![pkb-demo](https://github.com/user-attachments/assets/686ba6d8-fb42-4dab-a740-cb897231c0aa)
 
 ## Contents
 
@@ -57,7 +57,7 @@ If you have go installed, you can clone this repo and run:
 make install
 ```
 
-This will build the binary and then copy it to `/usr/bin/pkb` so it will be
+This will build the binary and then copy it to `/usr/local/bin/pkb` so it will be
 available on your path. Nothing more to it.
 
 ## Commands
@@ -78,12 +78,9 @@ created, just not opened.
 
 ### `edit`
 
-Open your editor in your notes directory.
+Select an existing note and open it in your editor.
 
-Want to pick a specific file through `pkb` rather than in your editor? Use the
-`--pick` flag to select the specific file then open it for editing.
-
-![pkb-edit-demo](https://github.com/user-attachments/assets/3df30ab5-704b-4c54-88d4-f2a053c070fb)
+![pkb-edit-demo](https://github.com/user-attachments/assets/d81b65ca-1afa-46e9-8e1e-e5345334997e)
 
 ### `copy`
 
@@ -93,6 +90,11 @@ Useful if you want to write up notes about something in your editor, but then
 need to share them somewhere for other people to read.
 
 ![pkb-copy-demo](https://user-images.githubusercontent.com/14163530/197569321-92c11700-7c43-4050-9e5b-123a1e8d38cf.gif)
+
+### `open`
+
+Open your notes directory in your specified editor.
+
 
 ## Configuration
 
