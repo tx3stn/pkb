@@ -20,6 +20,7 @@ import (
 // Renderer holds the config required to render and save the template.
 type Renderer struct {
 	Config           config.Config
+	CreatedFilePath  string
 	DirectoryPrompt  func() (string, error)
 	DirectorySelect  func(string) (string, error)
 	Name             string
@@ -82,6 +83,8 @@ func (t *Renderer) CreateAndSaveFile() (string, error) {
 		}
 	}()
 
+	t.CreatedFilePath = outputPath
+
 	if err := t.Render(string(contents), file, templateFile); err != nil {
 		return "", err
 	}
@@ -133,6 +136,7 @@ func (t *Renderer) Render(content string, writer io.Writer, templatePath string)
 	config := Variables{
 		Name:        t.Name,
 		Date:        now.Format("2006-01-02"),
+		Directory:   filepath.Base(filepath.Dir(t.CreatedFilePath)),
 		TemplateDir: filepath.Dir(templatePath),
 		Time:        now.Format("15:04"),
 		Week:        week,

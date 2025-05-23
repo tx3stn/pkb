@@ -187,7 +187,8 @@ func TestRender(t *testing.T) {
 		Config: config.Config{
 			Templates: map[string]config.Template{},
 		},
-		Name: "example doc",
+		CreatedFilePath: "/home/files/created/example doc.md",
+		Name:            "example doc",
 		SelectedTemplate: config.Template{
 			CustomDateFormat: "Monday 2nd January",
 		},
@@ -202,8 +203,8 @@ func TestRender(t *testing.T) {
 	}{
 		"expands expected variables": {
 			renderer:        testRenderer,
-			templateContent: "{{.Date}}\n{{.Name}}\n{{.Time}}\n{{.CustomDateFormat}}\n{{.Week}}\n{{.Year}}",
-			expected:        "2022-09-19\nexample doc\n16:20\nMonday 19th September\n38\n2022",
+			templateContent: "{{.Date}}\n{{.Name}}\n{{.Time}}\n{{.CustomDateFormat}}\n{{.Week}}\n{{.Year}}\n{{.Directory}}",
+			expected:        "2022-09-19\nexample doc\n16:20\nMonday 19th September\n38\n2022\ncreated",
 			expectedError:   nil,
 		},
 		"expands obsidian builtin variables": {

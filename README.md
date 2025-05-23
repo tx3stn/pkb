@@ -119,6 +119,7 @@ of day suffixes (e.g. 1st, 3rd etc). If your format contains a day suffix this
 will be be handled so the suffix is correctly displayed. The format string needs
 to be included in the template config to be able to use a custom date format.
 - `{{.Date}}` - the current date in the format YYYY-MM-DD.
+- `{{.Directory}}` - the name of the parent directory.
 - `{{.Name}}` - the name of the created document.
 - `{{.SelectFromList "filename.json"}}` - multiple select options from a json file
 in the same directory as the template, then render the selected options as a comma
