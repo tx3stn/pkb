@@ -1,10 +1,10 @@
 Set Height 600
 Source '/vhs/.scripts/base.tape'
 
-Output edit-pick.gif
+Output edit.gif
 Require nvim
 
-Type "pkb edit --pick"
+Type "pkb edit"
 Enter 1
 Sleep 2s
 
