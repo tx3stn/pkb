@@ -185,19 +185,33 @@ func (t *Renderer) OutputPath() (string, error) {
 	for _, config := range t.Templates {
 		outputDir := config.OutputDir
 
-		var err error
-		if config.OutputDir == "{{.Prompt}}" {
-			outputDir, err = t.DirectoryPrompt()
+		if strings.Contains(config.OutputDir, "{{.Prompt}}") {
+			input, err := t.DirectoryPrompt()
 			if err != nil {
 				return "", err
 			}
+
+			outputDir = strings.ReplaceAll(config.OutputDir, "{{.Prompt}}", input)
 		}
 
-		if config.OutputDir == "{{.Select}}" {
-			outputDir, err = t.DirectorySelect(filepath.Join(output...))
+		if strings.Contains(config.OutputDir, "{{.Select}}") {
+			selectDir := filepath.Join(output...)
+
+			// There is a directory path before the {{.Select}} string, to join to the config directory
+			// so the selection is triggered in the correct location.
+			if config.OutputDir != "{{.Select}}" {
+				selectDir = filepath.Join(
+					selectDir,
+					strings.ReplaceAll(config.OutputDir, "{{.Select}}", ""),
+				)
+			}
+
+			selection, err := t.DirectorySelect(selectDir)
 			if err != nil {
 				return "", err
 			}
+
+			outputDir = strings.ReplaceAll(config.OutputDir, "{{.Select}}", selection)
 		}
 
 		if strings.Contains(config.OutputDir, "{{.Year}}") {
