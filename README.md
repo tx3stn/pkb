@@ -5,7 +5,7 @@
 Config driven CLI to manage the notes and documents that make up your personal
 knowledge base.
 
-![pkb-demo](https://github.com/user-attachments/assets/cf8a37b4-d74d-426e-923e-abd782c96a66)
+![pkb-demo](https://github.com/user-attachments/assets/686ba6d8-fb42-4dab-a740-cb897231c0aa)
 
 ## Contents
 
@@ -80,7 +80,7 @@ created, just not opened.
 
 Select an existing note and open it in your editor.
 
-![pkb-edit-demo](https://github.com/user-attachments/assets/3df30ab5-704b-4c54-88d4-f2a053c070fb)
+![pkb-edit-demo](https://github.com/user-attachments/assets/d81b65ca-1afa-46e9-8e1e-e5345334997e)
 
 ### `copy`
 
