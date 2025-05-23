@@ -37,6 +37,7 @@ func init() {
 	rootCmd.AddCommand(CreateNew())
 	rootCmd.AddCommand(CreateEdit())
 	rootCmd.AddCommand(CreateCopy())
+	rootCmd.AddCommand(CreateOpen())
 	rootCmd.PersistentFlags().
 		StringVar(&flags.ConfigFile, "config", "", "config file if not held at default location")
 
