@@ -57,7 +57,7 @@ If you have go installed, you can clone this repo and run:
 make install
 ```
 
-This will build the binary and then copy it to `/usr/bin/pkb` so it will be
+This will build the binary and then copy it to `/usr/local/bin/pkb` so it will be
 available on your path. Nothing more to it.
 
 ## Commands
@@ -78,10 +78,7 @@ created, just not opened.
 
 ### `edit`
 
-Open your editor in your notes directory.
-
-Want to pick a specific file through `pkb` rather than in your editor? Use the
-`--pick` flag to select the specific file then open it for editing.
+Select an existing note and open it in your editor.
 
 ![pkb-edit-demo](https://github.com/user-attachments/assets/3df30ab5-704b-4c54-88d4-f2a053c070fb)
 
@@ -93,6 +90,11 @@ Useful if you want to write up notes about something in your editor, but then
 need to share them somewhere for other people to read.
 
 ![pkb-copy-demo](https://user-images.githubusercontent.com/14163530/197569321-92c11700-7c43-4050-9e5b-123a1e8d38cf.gif)
+
+### `open`
+
+Open your notes directory in your specified editor.
+
 
 ## Configuration
 
