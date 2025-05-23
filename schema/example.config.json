@@ -2,6 +2,14 @@
 	"$schema": "https://raw.githubusercontent.com/tx3stn/pkb/main/schema/config.json",
 	"directory": "testdata/output",
 	"editor": "nvim",
+	"ignore_dirs": [
+		".git",
+		".obsidian",
+		"templates"
+	],
+	"ignore_files": [
+		".gitignore"
+	],
 	"template_dir": "templates",
 	"templates": {
 		"daily": {
