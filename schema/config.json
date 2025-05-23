@@ -23,6 +23,14 @@
 					"description": "The editor to use to open notes after they are created. Must be triggerable from the terminal.",
 					"type": "string"
 				},
+				"ignore_dirs": {
+					"description": "Directories to ignore when listing any files for selection.",
+					"type": "array"
+				},
+				"ignore_files": {
+					"description": "Files to ignore when listing any files for selection.",
+					"type": "array"
+				},
 				"template_dir": {
 					"description": "The directory templates live in (inside the root directory provided in the config file).",
 					"type": "string"
@@ -36,6 +44,8 @@
 			"required": [
 				"directory",
 				"editor",
+				"ignore_dirs",
+				"ignore_files",
 				"templates"
 			],
 			"additionalProperties": false
@@ -75,14 +85,6 @@
 				"type": "object",
 				"$ref": "#/$defs/template"
 			}
-		},
-		"ignore_dirs": {
-			"description": "Directories to ignore when listing any files for selection.",
-			"type": "array"
-		},
-		"ignore_files": {
-			"description": "Files to ignore when listing any files for selection.",
-			"type": "array"
 		}
 	}
 }
