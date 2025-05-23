@@ -128,6 +128,25 @@ func TestOutputPath(t *testing.T) {
 			expectedError: nil,
 			expected:      "/home/username/notes/foo/dir/simple.md",
 		},
+		"prompt for user input supports path before": {
+			templateRenderer: template.Renderer{
+				Config: config.Config{
+					Directory: "/home/username/notes",
+				},
+				Name: "simple.md",
+				DirectoryPrompt: func() (string, error) {
+					return "foo/dir", nil
+				},
+				Templates: []config.Template{
+					{
+						File:      "magic.tpl.md",
+						OutputDir: "bar/{{.Prompt}}",
+					},
+				},
+			},
+			expectedError: nil,
+			expected:      "/home/username/notes/bar/foo/dir/simple.md",
+		},
 		"prompts user to select directory when specified in config": {
 			templateRenderer: template.Renderer{
 				Config: config.Config{
@@ -146,6 +165,25 @@ func TestOutputPath(t *testing.T) {
 			},
 			expectedError: nil,
 			expected:      "/home/username/notes/foo-dir/works.md",
+		},
+		"select support path prefix before selection": {
+			templateRenderer: template.Renderer{
+				Config: config.Config{
+					Directory: "/home/username/notes",
+				},
+				Name: "works.md",
+				DirectorySelect: func(_ string) (string, error) {
+					return "foo-dir", nil
+				},
+				Templates: []config.Template{
+					{
+						File:      "works.md",
+						OutputDir: "bar/{{.Select}}",
+					},
+				},
+			},
+			expectedError: nil,
+			expected:      "/home/username/notes/bar/foo-dir/works.md",
 		},
 		"adds year to path": {
 			templateRenderer: template.Renderer{
@@ -187,7 +225,8 @@ func TestRender(t *testing.T) {
 		Config: config.Config{
 			Templates: map[string]config.Template{},
 		},
-		Name: "example doc",
+		CreatedFilePath: "/home/files/created/example doc.md",
+		Name:            "example doc",
 		SelectedTemplate: config.Template{
 			CustomDateFormat: "Monday 2nd January",
 		},
@@ -202,8 +241,8 @@ func TestRender(t *testing.T) {
 	}{
 		"expands expected variables": {
 			renderer:        testRenderer,
-			templateContent: "{{.Date}}\n{{.Name}}\n{{.Time}}\n{{.CustomDateFormat}}\n{{.Week}}\n{{.Year}}",
-			expected:        "2022-09-19\nexample doc\n16:20\nMonday 19th September\n38\n2022",
+			templateContent: "{{.Date}}\n{{.Name}}\n{{.Time}}\n{{.CustomDateFormat}}\n{{.Week}}\n{{.Year}}\n{{.Directory}}",
+			expected:        "2022-09-19\nexample doc\n16:20\nMonday 19th September\n38\n2022\ncreated",
 			expectedError:   nil,
 		},
 		"expands obsidian builtin variables": {

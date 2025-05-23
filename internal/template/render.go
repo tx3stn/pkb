@@ -20,6 +20,7 @@ import (
 // Renderer holds the config required to render and save the template.
 type Renderer struct {
 	Config           config.Config
+	CreatedFilePath  string
 	DirectoryPrompt  func() (string, error)
 	DirectorySelect  func(string) (string, error)
 	Name             string
@@ -82,6 +83,8 @@ func (t *Renderer) CreateAndSaveFile() (string, error) {
 		}
 	}()
 
+	t.CreatedFilePath = outputPath
+
 	if err := t.Render(string(contents), file, templateFile); err != nil {
 		return "", err
 	}
@@ -133,6 +136,7 @@ func (t *Renderer) Render(content string, writer io.Writer, templatePath string)
 	config := Variables{
 		Name:        t.Name,
 		Date:        now.Format("2006-01-02"),
+		Directory:   filepath.Base(filepath.Dir(t.CreatedFilePath)),
 		TemplateDir: filepath.Dir(templatePath),
 		Time:        now.Format("15:04"),
 		Week:        week,
@@ -181,19 +185,33 @@ func (t *Renderer) OutputPath() (string, error) {
 	for _, config := range t.Templates {
 		outputDir := config.OutputDir
 
-		var err error
-		if config.OutputDir == "{{.Prompt}}" {
-			outputDir, err = t.DirectoryPrompt()
+		if strings.Contains(config.OutputDir, "{{.Prompt}}") {
+			input, err := t.DirectoryPrompt()
 			if err != nil {
 				return "", err
 			}
+
+			outputDir = strings.ReplaceAll(config.OutputDir, "{{.Prompt}}", input)
 		}
 
-		if config.OutputDir == "{{.Select}}" {
-			outputDir, err = t.DirectorySelect(filepath.Join(output...))
+		if strings.Contains(config.OutputDir, "{{.Select}}") {
+			selectDir := filepath.Join(output...)
+
+			// There is a directory path before the {{.Select}} string, to join to the config directory
+			// so the selection is triggered in the correct location.
+			if config.OutputDir != "{{.Select}}" {
+				selectDir = filepath.Join(
+					selectDir,
+					strings.ReplaceAll(config.OutputDir, "{{.Select}}", ""),
+				)
+			}
+
+			selection, err := t.DirectorySelect(selectDir)
 			if err != nil {
 				return "", err
 			}
+
+			outputDir = strings.ReplaceAll(config.OutputDir, "{{.Select}}", selection)
 		}
 
 		if strings.Contains(config.OutputDir, "{{.Year}}") {

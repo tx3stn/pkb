@@ -11,6 +11,7 @@ import (
 type Variables struct {
 	CustomDateFormat string
 	Date             string
+	Directory        string
 	Name             string
 	TemplateDir      string
 	Time             string
