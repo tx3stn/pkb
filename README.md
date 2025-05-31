@@ -19,6 +19,7 @@ knowledge base.
   - [Expanding values in templates](#expanding-values-in-templates)
   - [Custom file name formats](#custom-file-name-formats)
   - [Selecting an output directory](#selecting-an-output-directory)
+  - [Accessible mode](#accessible-mode)
 - [Using with Obsidian](#using-with-obsidian)
   - [Expanding Obsidian Template Variables](#expanding-obsidian-template-variables)
 
@@ -165,6 +166,15 @@ The following values are currently supported:
 does not already exist it will be created.
 - `{{.Select}}` - select from existing directories inside the parent.
 - `{{.Year}}` - the current year.
+
+### Accessible mode
+
+Some of the options when creating a file spawn interactive TUI elements. 
+If you would prefer for them to use standard prompt elements which should work 
+better with screen reader tools, you can set `"accessible_mode": true` in your 
+config file.
+
+![accessible mode](https://github.com/user-attachments/assets/e6638d47-311a-4a88-875c-e3c6499e67cc)
 
 ## Using with Obsidian
 
