@@ -18,6 +18,17 @@ jobs:
           go-version: 1.24
           cache: true
       - name: build binary
-        run: make build
+        run: make install
       - name: test
-        run: ./.scripts/run-tests-with-summary.sh > "$GITHUB_STEP_SUMMARY"
+        run: ./.scripts/run-unit-tests-with-summary.sh > "$GITHUB_STEP_SUMMARY"
+      - uses: bats-core/bats-action@3.0.1
+        name: setup bats
+        id: setup-bats
+      - name: install expect
+        run: sudo apt install -y expect
+      - name: end to end tests
+        shell: bash
+        env:
+          BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
+          TERM: xterm
+        run: ./.scripts/run-e2e-tests-with-summary.sh > "$GITHUB_STEP_SUMMARY"

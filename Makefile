@@ -7,12 +7,12 @@ define ajv-docker
 endef
 
 define vhs-docker
-	docker run --rm -v ${PWD}:/vhs --workdir /vhs ${BINARY_NAME}-vhs:demo
+	docker run --rm -v ${PWD}:/vhs --workdir /vhs ${BINARY_NAME}/vhs:local
 endef
 
 .PHONY: build
 build:
-	@go build -ldflags "-X github.com/tx3stn/pkb/cmd.Version=${VERSION}" -o ${BINARY_NAME} .
+	@CGO_ENABLED=0 go build -ldflags "-X github.com/tx3stn/pkb/cmd.Version=${VERSION}" -o ${BINARY_NAME} .
 
 .PHONY: generate-gifs
 generate-gifs: build
@@ -41,3 +41,9 @@ schema-validate:
 .PHONY: test
 test:
 	@CGO_ENABLED=1 go test ${DIR} -race -cover
+
+
+.PHONY: test-e2e
+test-e2e: build
+	@docker build . -f .docker/bats-tests.Dockerfile -t pkb/bats:local
+	@docker run --rm -it -v ${PWD}:/code pkb/bats:local bats --verbose-run --formatter pretty /code/.scripts/e2e-tests

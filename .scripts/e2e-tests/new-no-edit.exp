@@ -1,0 +1,10 @@
+#!/usr/bin/expect -f
+
+set timeout -1
+set config_file [lindex $argv 0];
+
+spawn pkb --config "$config_file" new --no-edit
+match_max 100000
+expect -re ".*enter file name(.|\n|\r)*"
+send -- "foo\r"
+expect eof

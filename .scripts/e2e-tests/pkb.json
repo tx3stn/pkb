@@ -1,0 +1,22 @@
+{
+	"$schema": "https://raw.githubusercontent.com/tx3stn/pkb/refs/heads/main/schema/config.json",
+	"accessible_mode": true,
+	"directory": "/tmp/pkb-output",
+	"editor": "nvim",
+	"ignore_dirs": [
+		".git",
+		".obsidian",
+		"templates"
+	],
+	"ignore_files": [
+		".gitignore",
+		".gitkeep"
+	],
+	"template_dir": "templates",
+	"templates": {
+		"simple": {
+			"file": "simple.md",
+			"output_dir": "simple"
+		}
+	}
+}
