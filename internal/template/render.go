@@ -32,15 +32,19 @@ type Renderer struct {
 
 // NewRenderer creates a new instance of the TemplateRenderer.
 func NewRenderer(conf config.Config, templates []config.Template) Renderer {
-	dir := prompt.NewDirectorySelector()
+	dir := prompt.NewDirectorySelector(conf.AccessibleMode)
 
 	return Renderer{
-		Config:          conf,
-		DirectoryPrompt: prompt.EnterDirectory,
+		Config: conf,
+		DirectoryPrompt: func() (string, error) {
+			return prompt.EnterDirectory(conf.AccessibleMode)
+		},
 		DirectorySelect: dir.Select,
-		NamePrompt:      prompt.EnterFileName,
-		Time:            time.Now(),
-		Templates:       templates,
+		NamePrompt: func() (string, error) {
+			return prompt.EnterFileName(conf.AccessibleMode)
+		},
+		Time:      time.Now(),
+		Templates: templates,
 	}
 }
 
@@ -134,13 +138,14 @@ func (t *Renderer) Render(content string, writer io.Writer, templatePath string)
 	year, week := now.ISOWeek()
 
 	config := Variables{
-		Name:        t.Name,
-		Date:        now.Format("2006-01-02"),
-		Directory:   filepath.Base(filepath.Dir(t.CreatedFilePath)),
-		TemplateDir: filepath.Dir(templatePath),
-		Time:        now.Format("15:04"),
-		Week:        week,
-		Year:        year,
+		AccessibleMode: t.Config.AccessibleMode,
+		Name:           t.Name,
+		Date:           now.Format("2006-01-02"),
+		Directory:      filepath.Base(filepath.Dir(t.CreatedFilePath)),
+		TemplateDir:    filepath.Dir(templatePath),
+		Time:           now.Format("15:04"),
+		Week:           week,
+		Year:           year,
 	}
 
 	// If a custom date format is specified on the template config run it through

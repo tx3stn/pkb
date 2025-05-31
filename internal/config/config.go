@@ -20,12 +20,13 @@ const ContextKey CtxKey = "config"
 type (
 	// Config represents the options defined in the config file.
 	Config struct {
-		Directory   string    `json:"directory"`
-		Editor      string    `json:"editor"`
-		IgnoreDirs  []string  `json:"ignore_dirs"`
-		IgnoreFiles []string  `json:"ignore_files"`
-		TemplateDir string    `json:"template_dir"`
-		Templates   Templates `json:"templates"`
+		AccessibleMode bool      `json:"accessible_mode"`
+		Directory      string    `json:"directory"`
+		Editor         string    `json:"editor"`
+		IgnoreDirs     []string  `json:"ignore_dirs"`
+		IgnoreFiles    []string  `json:"ignore_files"`
+		TemplateDir    string    `json:"template_dir"`
+		Templates      Templates `json:"templates"`
 	}
 )
 

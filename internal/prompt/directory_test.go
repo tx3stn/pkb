@@ -20,7 +20,7 @@ func TestDirectorySelect(t *testing.T) {
 	}{
 		"returns selected options": {
 			parentDir: "./testdata",
-			selectFunc: func(input []string) (string, error) {
+			selectFunc: func(input []string, accessible bool) (string, error) {
 				return "bar", nil
 			},
 			expected:      "bar",
@@ -28,7 +28,7 @@ func TestDirectorySelect(t *testing.T) {
 		},
 		"returns error when the directory doesn't exist": {
 			parentDir: "./error",
-			selectFunc: func(input []string) (string, error) {
+			selectFunc: func(input []string, accessible bool) (string, error) {
 				return "", nil
 			},
 			expected:      "",

@@ -22,7 +22,7 @@ func CreateNew() *cobra.Command {
 			}
 
 			selected := []config.Template{}
-			selector := prompt.NewTemplateSelector()
+			selector := prompt.NewTemplateSelector(conf.AccessibleMode)
 
 			selected, err = selector.SelectTemplateWithSubTemplates(conf.Templates, selected)
 			if err != nil {

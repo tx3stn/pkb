@@ -1,5 +1,5 @@
 Set Height 600
-Source '/vhs/.scripts/base.tape'
+Source '/vhs/.scripts/gifs/base.tape'
 
 Output new-no-edit.gif
 
@@ -15,7 +15,7 @@ Sleep 0.4s
 Type "amazing project"
 Enter 1
 Sleep 0.4s
-Type meeting minutes
+Type "meeting minutes"
 Enter 1
 Sleep 0.4s
 Down 1
