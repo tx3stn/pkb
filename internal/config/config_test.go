@@ -58,3 +58,36 @@ func TestFindConfigFile(t *testing.T) {
 		})
 	}
 }
+
+func TestGet(t *testing.T) {
+	testCases := map[string]struct {
+		fileFlag      string
+		xdgEnvValue   string
+		expectedError error
+		expected      config.Config
+	}{
+		"ReturnsErrorWhenFileIsInvalid": {
+			fileFlag:      "",
+			xdgEnvValue:   "testdata/xdg/invalid",
+			expectedError: config.ErrUnmashallingJSON,
+			expected:      config.Config{},
+		},
+	}
+
+	for name, testCase := range testCases {
+		tc := testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Setenv("XDG_CONFIG_DIR", tc.xdgEnvValue)
+
+			actual, err := config.Get(tc.fileFlag)
+			require.ErrorIs(t, err, tc.expectedError)
+			assert.Equal(t, tc.expected, actual)
+		})
+
+		t.Cleanup(func() {
+			err := os.Unsetenv("XDG_CONFIG_DIR")
+			require.NoError(t, err)
+		})
+	}
+}
