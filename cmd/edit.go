@@ -15,7 +15,7 @@ import (
 func CreateEdit() *cobra.Command {
 	cmd := &cobra.Command{
 		RunE: func(ccmd *cobra.Command, args []string) error {
-			conf, err := config.Get(flags.ConfigFile)
+			conf, err := config.Get(flags.ConfigFile, flags.Vault)
 			if err != nil {
 				return fmt.Errorf("error getting config: %w", err)
 			}

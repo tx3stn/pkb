@@ -14,24 +14,28 @@ func TestFindConfigFile(t *testing.T) {
 	testCases := map[string]struct {
 		xdgEnvValue   string
 		homeEnvValue  string
+		vaultFlag     string
 		expected      string
 		expectedError error
 	}{
 		"ReturnsXdgFileWhenExists": {
 			xdgEnvValue:   "testdata/xdg/valid",
 			homeEnvValue:  "testdata/home/",
+			vaultFlag:     "",
 			expected:      "testdata/xdg/valid/pkb/pkb.json",
 			expectedError: nil,
 		},
 		"ReturnsHomeFileWhenExists": {
 			xdgEnvValue:   "",
 			homeEnvValue:  "testdata/home/",
+			vaultFlag:     "",
 			expected:      "testdata/home/.config/pkb/pkb.json",
 			expectedError: nil,
 		},
 		"ReturnsEmptyStringWhenNoEnvVarsAreSet": {
 			xdgEnvValue:   "",
 			homeEnvValue:  "",
+			vaultFlag:     "",
 			expected:      "",
 			expectedError: nil,
 		},
@@ -44,7 +48,7 @@ func TestFindConfigFile(t *testing.T) {
 			t.Setenv("XDG_CONFIG_DIR", tc.xdgEnvValue)
 			t.Setenv("HOME", tc.homeEnvValue)
 
-			file, err := config.FindConfigFile()
+			file, err := config.FindConfigFile(tc.vaultFlag)
 			require.ErrorIs(t, err, tc.expectedError)
 			assert.Equal(t, tc.expected, file)
 		})
@@ -62,12 +66,14 @@ func TestFindConfigFile(t *testing.T) {
 func TestGet(t *testing.T) {
 	testCases := map[string]struct {
 		fileFlag      string
+		vaultFlag     string
 		xdgEnvValue   string
 		expectedError error
 		expected      config.Config
 	}{
 		"ReturnsErrorWhenFileIsInvalid": {
 			fileFlag:      "",
+			vaultFlag:     "",
 			xdgEnvValue:   "testdata/xdg/invalid",
 			expectedError: config.ErrUnmashallingJSON,
 			expected:      config.Config{},
@@ -80,7 +86,7 @@ func TestGet(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Setenv("XDG_CONFIG_DIR", tc.xdgEnvValue)
 
-			actual, err := config.Get(tc.fileFlag)
+			actual, err := config.Get(tc.fileFlag, tc.vaultFlag)
 			require.ErrorIs(t, err, tc.expectedError)
 			assert.Equal(t, tc.expected, actual)
 		})

@@ -35,4 +35,6 @@ func init() {
 	rootCmd.AddCommand(CreateOpen())
 	rootCmd.PersistentFlags().
 		StringVar(&flags.ConfigFile, "config", "", "config file if not held at default location")
+	rootCmd.PersistentFlags().
+		StringVar(&flags.Vault, "vault", "pkb", "name of file to use in config file if not default pkb.json")
 }

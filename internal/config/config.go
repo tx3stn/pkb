@@ -22,13 +22,14 @@ type (
 )
 
 // Get returns the config read from the file.
-func Get(fileFlag string) (Config, error) {
+func Get(fileFlag string, vaultFlag string) (Config, error) {
 	var file string
 
 	var err error
 
 	if fileFlag == "" {
-		file, err = FindConfigFile()
+		// TODO: add support for multiple files in same dir
+		file, err = FindConfigFile(vaultFlag)
 		if err != nil {
 			return Config{}, err
 		}
@@ -73,11 +74,14 @@ func (c Config) ValidatePaths() error {
 // The paths are checked in the order of precedence:
 //   - XDG_CONFIG_DIR
 //   - HOME/.config
-func FindConfigFile() (string, error) {
+func FindConfigFile(vaultFlag string) (string, error) {
 	paths := []string{}
 	dirName := "pkb"
 	// TODO: support files with other names from --vault flag
 	configFileName := "pkb.json"
+	if vaultFlag != "" {
+		configFileName = vaultFlag
+	}
 
 	if xdg, ok := os.LookupEnv("XDG_CONFIG_DIR"); ok {
 		paths = append(paths, filepath.Join(xdg, dirName))

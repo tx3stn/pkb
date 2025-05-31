@@ -9,4 +9,8 @@ var (
 	// NoEdit is the variable for the `--no-edit` CLI flag used by the `new`
 	// command when you don't want to edit the file after creating.
 	NoEdit bool
+
+	// Vault is the variable for the `--vault` CLI flag, used to select a config
+	// file from the config directory.
+	Vault string
 )
