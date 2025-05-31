@@ -33,7 +33,9 @@ func userPrompt(promptString string, accessible bool) (string, error) {
 		return "", fmt.Errorf("%w: %w", ErrSelectingTemplate, err)
 	}
 
-	fmt.Println(strings.ReplaceAll(prompt.View(), "\n", ""))
+	if !accessible {
+		fmt.Println(strings.ReplaceAll(prompt.View(), "\n", ""))
+	}
 
 	return result, nil
 }
