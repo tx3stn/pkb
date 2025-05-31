@@ -6,13 +6,14 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/tx3stn/pkb/internal/config"
 	"github.com/tx3stn/pkb/internal/editor"
+	"github.com/tx3stn/pkb/internal/flags"
 )
 
 // CreateOpen creates the new command "open" used to open your editor to edit existing notes.
 func CreateOpen() *cobra.Command {
 	cmd := &cobra.Command{
 		RunE: func(ccmd *cobra.Command, args []string) error {
-			conf, err := config.Get()
+			conf, err := config.Get(flags.ConfigFile)
 			if err != nil {
 				return fmt.Errorf("error getting config: %w", err)
 			}

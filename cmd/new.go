@@ -16,7 +16,7 @@ import (
 func CreateNew() *cobra.Command {
 	cmd := &cobra.Command{
 		RunE: func(ccmd *cobra.Command, args []string) error {
-			conf, err := config.Get()
+			conf, err := config.Get(flags.ConfigFile)
 			if err != nil {
 				return fmt.Errorf("error getting config file: %w", err)
 			}

@@ -6,16 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-
-	"github.com/spf13/viper"
 )
-
-// CtxKey is the type for the config that gets bound to the cobra context
-// so config values can be accessed by cobra commands.
-type CtxKey string
-
-// ContextKey is the key value required to access the cobra command context.
-const ContextKey CtxKey = "config"
 
 type (
 	// Config represents the options defined in the config file.
@@ -30,32 +21,36 @@ type (
 	}
 )
 
-// Get fetches the config via viper and converts it to a config struct so it
-// can be used properly.
-func Get() (Config, error) {
-	conf := viper.AllSettings()
+// Get returns the config read from the file.
+func Get(fileFlag string) (Config, error) {
+	var file string
 
-	jsonContent, err := json.Marshal(conf)
-	if err != nil {
-		return Config{}, fmt.Errorf("error marshalling config: %w", err)
+	var err error
+
+	if fileFlag == "" {
+		file, err = FindConfigFile()
+		if err != nil {
+			return Config{}, err
+		}
+	} else {
+		file = fileFlag
 	}
 
-	parsedConfig := Config{}
-	if err := json.Unmarshal(jsonContent, &parsedConfig); err != nil {
+	if file == "" {
+		return Config{}, ErrConfigNotFound
+	}
+
+	content, err := os.ReadFile(filepath.Clean(file))
+	if err != nil {
+		return Config{}, fmt.Errorf("%w: %w", ErrReadingConfigFile, err)
+	}
+
+	var conf Config
+	if err = json.Unmarshal(content, &conf); err != nil {
 		return Config{}, fmt.Errorf("%w: %w", ErrUnmashallingJSON, err)
 	}
 
-	return parsedConfig, nil
-}
-
-// GetDirectory returns the directory value defined in config.
-func GetDirectory() (string, error) {
-	dir := viper.GetString("directory")
-	if dir == "" {
-		return "", ErrNoDirectory
-	}
-
-	return dir, nil
+	return conf, nil
 }
 
 // ValidatePaths checks the paths defined in the config file exist, to give
@@ -71,4 +66,40 @@ func (c Config) ValidatePaths() error {
 	}
 
 	return nil
+}
+
+// FindConfigFile checks the expected paths for a pkb config file and returns the
+// path to it if found.
+// The paths are checked in the order of precedence:
+//   - XDG_CONFIG_DIR
+//   - HOME/.config
+func FindConfigFile() (string, error) {
+	paths := []string{}
+	dirName := "pkb"
+	// TODO: support files with other names from --vault flag
+	configFileName := "pkb.json"
+
+	if xdg, ok := os.LookupEnv("XDG_CONFIG_DIR"); ok {
+		paths = append(paths, filepath.Join(xdg, dirName))
+	}
+
+	if home, ok := os.LookupEnv("HOME"); ok {
+		paths = append(paths, filepath.Join(home, ".config", dirName))
+	}
+
+	if len(paths) == 0 {
+		return "", nil
+	}
+
+	for _, path := range paths {
+		file := filepath.Join(path, configFileName)
+		if _, err := os.Stat(file); os.IsNotExist(err) {
+			// no config file at location, continue looking.
+			continue
+		}
+
+		return file, nil
+	}
+
+	return "", nil
 }

@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/tx3stn/pkb/internal/config"
 	"github.com/tx3stn/pkb/internal/editor"
+	"github.com/tx3stn/pkb/internal/flags"
 	"github.com/tx3stn/pkb/internal/prompt"
 )
 
@@ -14,7 +15,7 @@ import (
 func CreateEdit() *cobra.Command {
 	cmd := &cobra.Command{
 		RunE: func(ccmd *cobra.Command, args []string) error {
-			conf, err := config.Get()
+			conf, err := config.Get(flags.ConfigFile)
 			if err != nil {
 				return fmt.Errorf("error getting config: %w", err)
 			}
