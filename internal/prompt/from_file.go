@@ -11,18 +11,20 @@ import (
 )
 
 // FromFileSelectorFunc is the type def for the selector func used in the TemplateSelector struct.
-type FromFileSelectorFunc func([]string, string) ([]string, error)
+type FromFileSelectorFunc func([]string, string, bool) ([]string, error)
 
 // OptsFromFileSelector is a utility struct to enable mocking of calls to the survey
 // prompt for easier testability.
 type OptsFromFileSelector struct {
-	SelectFunc FromFileSelectorFunc
+	SelectFunc     FromFileSelectorFunc
+	AccessibleMode bool
 }
 
 // NewOptsFromFileSelector creates a new instance of the file selector.
-func NewOptsFromFileSelector() OptsFromFileSelector {
+func NewOptsFromFileSelector(accessible bool) OptsFromFileSelector {
 	return OptsFromFileSelector{
-		SelectFunc: selectFromOptions,
+		SelectFunc:     selectFromOptions,
+		AccessibleMode: accessible,
 	}
 }
 
@@ -42,6 +44,7 @@ func (o OptsFromFileSelector) Select(jsonPath string) ([]string, error) {
 	selected, err := o.SelectFunc(
 		values,
 		strings.TrimSuffix(filepath.Base(jsonPath), filepath.Ext(jsonPath)),
+		o.AccessibleMode,
 	)
 	if err != nil {
 		return []string{}, err
@@ -51,7 +54,7 @@ func (o OptsFromFileSelector) Select(jsonPath string) ([]string, error) {
 }
 
 // selectFromOptions prompts the user to select multiple values from the template provided.
-func selectFromOptions(opts []string, fileName string) ([]string, error) {
+func selectFromOptions(opts []string, fileName string, accessible bool) ([]string, error) {
 	var selected []string
 
 	prompt := huh.NewMultiSelect[string]().
@@ -59,11 +62,15 @@ func selectFromOptions(opts []string, fileName string) ([]string, error) {
 		Title(fmt.Sprintf("select from %s:", fileName)).
 		Value(&selected)
 
+	prompt.WithAccessible(accessible)
+
 	if err := prompt.Run(); err != nil {
 		return []string{}, fmt.Errorf("error selecting options from template: %w", err)
 	}
 
-	fmt.Println(strings.ReplaceAll(prompt.View(), "\n", ""))
+	if !accessible {
+		fmt.Println(strings.ReplaceAll(prompt.View(), "\n", ""))
+	}
 
 	return selected, nil
 }

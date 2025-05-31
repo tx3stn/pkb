@@ -20,7 +20,7 @@ func TestSelectFromDir(t *testing.T) {
 	}{
 		"returns selected file from directory": {
 			inputDir: "./testdata",
-			selectFunc: func(input []string) (string, error) {
+			selectFunc: func(input []string, accessible bool) (string, error) {
 				return "example.json", nil
 			},
 			expected:      "example.json",
@@ -28,7 +28,7 @@ func TestSelectFromDir(t *testing.T) {
 		},
 		"returns error when the directory doesn't exist": {
 			inputDir: "./testdata/baz",
-			selectFunc: func(input []string) (string, error) {
+			selectFunc: func(input []string, accessible bool) (string, error) {
 				return "", nil
 			},
 			expected:      "",

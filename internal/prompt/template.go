@@ -12,18 +12,20 @@ import (
 )
 
 // TemplateSelectorFunc is the type def for the selector func used in the TemplateSelector struct.
-type TemplateSelectorFunc func([]string) (string, error)
+type TemplateSelectorFunc func([]string, bool) (string, error)
 
 // TemplateSelector is a utility struct to enable mocking of calls to the
 // survey prompt for easier testability.
 type TemplateSelector struct {
-	SelectFunc TemplateSelectorFunc
+	SelectFunc     TemplateSelectorFunc
+	accessibleMode bool
 }
 
 // NewTemplateSelector creates a new instance of the TemplateSelector struct.
-func NewTemplateSelector() TemplateSelector {
+func NewTemplateSelector(accessible bool) TemplateSelector {
 	return TemplateSelector{
-		SelectFunc: selectTemplate,
+		SelectFunc:     selectTemplate,
+		accessibleMode: accessible,
 	}
 }
 
@@ -52,7 +54,7 @@ func (t TemplateSelector) SelectTemplateWithSubTemplates(
 		templateList := slices.AppendSeq(make([]string, 0, len(templates)), maps.Keys(templates))
 		sort.Strings(templateList)
 
-		selectedName, err := t.SelectFunc(templateList)
+		selectedName, err := t.SelectFunc(templateList, t.accessibleMode)
 		if err != nil {
 			return []config.Template{}, err
 		}
@@ -73,7 +75,7 @@ func (t TemplateSelector) SelectTemplateWithSubTemplates(
 }
 
 // selectTemplate prompts the user to select a template from the ones defined in config.
-func selectTemplate(templates []string) (string, error) {
+func selectTemplate(templates []string, accessible bool) (string, error) {
 	var selected string
 
 	prompt := huh.NewSelect[string]().
@@ -81,11 +83,15 @@ func selectTemplate(templates []string) (string, error) {
 		Title("select template:").
 		Value(&selected)
 
+	prompt.WithAccessible(accessible)
+
 	if err := prompt.Run(); err != nil {
 		return "", fmt.Errorf("%w: %w", ErrSelectingTemplate, err)
 	}
 
-	fmt.Println(strings.ReplaceAll(prompt.View(), "\n", ""))
+	if !accessible {
+		fmt.Println(strings.ReplaceAll(prompt.View(), "\n", ""))
+	}
 
 	return selected, nil
 }

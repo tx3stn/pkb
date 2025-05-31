@@ -9,22 +9,24 @@ import (
 )
 
 // FileSelectorFunc is the type def for the selector func used in the TemplateSelector struct.
-type FileSelectorFunc func([]string) (string, error)
+type FileSelectorFunc func([]string, bool) (string, error)
 
 // FileSelector is a utility struct to enable mocking of calls to the survey
 // prompt for easier testability.
 type FileSelector struct {
-	SelectFunc  FileSelectorFunc
-	IgnoreDirs  []string
-	IgnoreFiles []string
+	SelectFunc     FileSelectorFunc
+	IgnoreDirs     []string
+	IgnoreFiles    []string
+	accessibleMode bool
 }
 
 // NewFileSelector creates a new instance of the file selector.
-func NewFileSelector(ignoreDirs []string, ignoreFiles []string) FileSelector {
+func NewFileSelector(ignoreDirs []string, ignoreFiles []string, accessible bool) FileSelector {
 	return FileSelector{
-		SelectFunc:  selectFile,
-		IgnoreDirs:  ignoreDirs,
-		IgnoreFiles: ignoreFiles,
+		SelectFunc:     selectFile,
+		IgnoreDirs:     ignoreDirs,
+		IgnoreFiles:    ignoreFiles,
+		accessibleMode: accessible,
 	}
 }
 
@@ -35,7 +37,7 @@ func (f FileSelector) SelectFromDir(searchDir string) (string, error) {
 		return "", fmt.Errorf("%w: %w", ErrGettingFilesInDirectory, err)
 	}
 
-	selected, err := f.SelectFunc(allPaths)
+	selected, err := f.SelectFunc(allPaths, f.accessibleMode)
 	if err != nil {
 		return "", err
 	}
@@ -45,7 +47,7 @@ func (f FileSelector) SelectFromDir(searchDir string) (string, error) {
 
 // selectFile prompts the user to select a file and returns the
 // full path of the selected file.
-func selectFile(filesInDir []string) (string, error) {
+func selectFile(filesInDir []string, accessible bool) (string, error) {
 	var selected string
 
 	prompt := huh.NewSelect[string]().
@@ -53,11 +55,15 @@ func selectFile(filesInDir []string) (string, error) {
 		Title("select file:").
 		Value(&selected)
 
+	prompt.WithAccessible(accessible)
+
 	if err := prompt.Run(); err != nil {
 		return "", fmt.Errorf("%w: %w", ErrSelectingFile, err)
 	}
 
-	fmt.Println(strings.ReplaceAll(prompt.View(), "\n", ""))
+	if !accessible {
+		fmt.Println(strings.ReplaceAll(prompt.View(), "\n", ""))
+	}
 
 	return selected, nil
 }

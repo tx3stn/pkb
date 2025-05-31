@@ -11,18 +11,20 @@ import (
 
 // DirectorySelectorFunc is the type def for the selector func used in the
 // DirectorySelector struct.
-type DirectorySelectorFunc func([]string) (string, error)
+type DirectorySelectorFunc func([]string, bool) (string, error)
 
 // DirectorySelector is a utility struct to enable mocking of calls to the selector
 // prompt for easier testability.
 type DirectorySelector struct {
-	SelectFunc DirectorySelectorFunc
+	SelectFunc     DirectorySelectorFunc
+	accessibleMode bool
 }
 
 // NewDirectorySelector creates a new instance of the DirectorySelector.
-func NewDirectorySelector() DirectorySelector {
+func NewDirectorySelector(accessible bool) DirectorySelector {
 	return DirectorySelector{
-		SelectFunc: selectDirectory,
+		SelectFunc:     selectDirectory,
+		accessibleMode: accessible,
 	}
 }
 
@@ -35,7 +37,7 @@ func (d DirectorySelector) Select(parent string) (string, error) {
 
 	sort.Strings(subDirectories)
 
-	selected, err := d.SelectFunc(subDirectories)
+	selected, err := d.SelectFunc(subDirectories, d.accessibleMode)
 	if err != nil {
 		return "", err
 	}
@@ -46,7 +48,7 @@ func (d DirectorySelector) Select(parent string) (string, error) {
 // selectDirectory prompts the user to select a sub driectory in the provided
 // parent. If the parent directory does not have any subdirectories this will
 // error.
-func selectDirectory(subDirectories []string) (string, error) {
+func selectDirectory(subDirectories []string, accessible bool) (string, error) {
 	var selected string
 
 	prompt := huh.NewSelect[string]().
@@ -54,11 +56,15 @@ func selectDirectory(subDirectories []string) (string, error) {
 		Title("select directory:").
 		Value(&selected)
 
+	prompt.WithAccessible(accessible)
+
 	if err := prompt.Run(); err != nil {
 		return "", fmt.Errorf("%w: %w", ErrSelectingDirectory, err)
 	}
 
-	fmt.Println(strings.ReplaceAll(prompt.View(), "\n", ""))
+	if !accessible {
+		fmt.Println(strings.ReplaceAll(prompt.View(), "\n", ""))
+	}
 
 	return selected, nil
 }

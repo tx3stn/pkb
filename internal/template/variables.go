@@ -9,6 +9,7 @@ import (
 
 // Variables are the variables that are expanded when rendering the template.
 type Variables struct {
+	AccessibleMode   bool
 	CustomDateFormat string
 	Date             string
 	Directory        string
@@ -22,7 +23,7 @@ type Variables struct {
 // SelectFromList prompts a user to select the options to add from the specified
 // json file.
 func (v Variables) SelectFromList(listFileName string) string {
-	opts := prompt.NewOptsFromFileSelector()
+	opts := prompt.NewOptsFromFileSelector(v.AccessibleMode)
 
 	selected, err := opts.Select(filepath.Join(v.TemplateDir, listFileName))
 	if err != nil {
