@@ -18,7 +18,7 @@ jobs:
           go-version: 1.24
           cache: true
       - name: build binary
-        run: make build
+        run: make install
       - name: test
         run: ./.scripts/run-unit-tests-with-summary.sh > "$GITHUB_STEP_SUMMARY"
       - uses: bats-core/bats-action@3.0.1
