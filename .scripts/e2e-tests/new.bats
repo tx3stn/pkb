@@ -8,7 +8,7 @@ setup() {
 	bats_load_library bats-assert
 }
 
-@test "pkb new" {
+@test "pkb new: help" {
 	run pkb --help
 	assert_success
 }
