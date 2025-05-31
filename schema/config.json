@@ -15,6 +15,10 @@
 					"description": "Link to the JSON schema for validation.",
 					"type": "string"
 				},
+				"accessible_mode": {
+					"description": "Replace TUI interactive prompts with standard prompts easier for screen readers to use.",
+					"type": "boolean"
+				},
 				"directory": {
 					"description": "The directory you want to store your notes in. This will be used as the base directory with any template 'out_dirs' being used as sub directories.",
 					"type": "string"
