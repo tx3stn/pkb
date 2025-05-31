@@ -1,5 +1,5 @@
 Set Height 600
-Source '/vhs/.scripts/base.tape'
+Source '/vhs/.scripts/gifs/base.tape'
 
 Output edit.gif
 Require nvim
