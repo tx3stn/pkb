@@ -46,4 +46,4 @@ test:
 .PHONY: test-e2e
 test-e2e: build
 	@docker build . -f .docker/bats-tests.Dockerfile -t pkb/bats:local
-	@docker run --rm -it -v ${PWD}/.scripts:/code pkb/bats:local bats --verbose-run --formatter pretty /code/e2e-tests
+	@docker run --rm -it -v ${PWD}:/code pkb/bats:local bats --verbose-run --formatter pretty /code/.scripts/e2e-tests
