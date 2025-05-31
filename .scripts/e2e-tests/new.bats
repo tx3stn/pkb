@@ -25,7 +25,7 @@ teardown() {
 	echo "### test teardown ###"
 }
 
-@test "pkb new: file is created with --no-edit" {
+@test "pkb new : file is created with --no-edit" {
 	eval "run $BATS_TEST_DIRNAME/new-no-edit.exp $BATS_TEST_DIRNAME/pkb.json"
 	assert_success
 
