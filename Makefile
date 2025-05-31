@@ -15,7 +15,7 @@ build:
 	@go build -ldflags "-X github.com/tx3stn/pkb/cmd.Version=${VERSION}" -o ${BINARY_NAME} .
 
 .PHONY: generate-gifs
-generate-gifs:
+generate-gifs: build
 	@docker build --tag ${BINARY_NAME}-vhs:demo -f ./.docker/demo-gif.Dockerfile .
 	@$(vhs-docker) /vhs/.scripts/gifs/demo.tape
 	@$(vhs-docker) /vhs/.scripts/gifs/new-no-edit.tape
