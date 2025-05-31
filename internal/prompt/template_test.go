@@ -22,7 +22,7 @@ func TestSelectTemplateWithSubTemplates(t *testing.T) {
 		expectedError error
 	}{
 		"returns single template with no sub templates": {
-			selectorFunc: func(templates []string) (string, error) {
+			selectorFunc: func(templates []string, accessible bool) (string, error) {
 				return "foo", nil
 			},
 			input:         config.Templates{"foo": {File: "foo.tpl.md"}},
@@ -30,7 +30,7 @@ func TestSelectTemplateWithSubTemplates(t *testing.T) {
 			expectedError: nil,
 		},
 		"returns multiple templates when you have nested sub templates": {
-			selectorFunc: func(templates []string) (string, error) {
+			selectorFunc: func(templates []string, accessible bool) (string, error) {
 				return "bar", nil
 			},
 			input: config.Templates{
@@ -83,7 +83,7 @@ func TestSelectTemplateWithSubTemplates(t *testing.T) {
 			expectedError: nil,
 		},
 		"returns error when select errors": {
-			selectorFunc: func(templates []string) (string, error) {
+			selectorFunc: func(templates []string, accessible bool) (string, error) {
 				return "", errorPickingTemplate
 			},
 			input: config.Templates{
