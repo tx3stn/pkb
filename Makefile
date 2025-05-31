@@ -20,6 +20,7 @@ generate-gifs:
 	@$(vhs-docker) /vhs/.scripts/gifs/demo.tape
 	@$(vhs-docker) /vhs/.scripts/gifs/new-no-edit.tape
 	@$(vhs-docker) /vhs/.scripts/gifs/edit.tape
+	@$(vhs-docker) /vhs/.scripts/gifs/accessible-mode.tape
 
 .PHONY: install
 install: build

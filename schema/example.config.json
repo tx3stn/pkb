@@ -1,6 +1,6 @@
 {
 	"$schema": "./config.json",
-	"accessible_mode": true,
+	"accessible_mode": false,
 	"directory": "testdata/output",
 	"editor": "nvim",
 	"ignore_dirs": [
