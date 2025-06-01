@@ -34,6 +34,15 @@ func Get(fileFlag string, vaultFlag string) (Config, error) {
 			return Config{}, err
 		}
 	} else {
+		_, err := os.Stat(fileFlag)
+		if os.IsNotExist(err) {
+			return Config{}, fmt.Errorf("%w: %s", ErrConfigNotFound, fileFlag)
+		}
+
+		if err != nil {
+			return Config{}, fmt.Errorf("error checking for existence of config file: %w", err)
+		}
+
 		file = fileFlag
 	}
 
@@ -77,10 +86,10 @@ func (c Config) ValidatePaths() error {
 func FindConfigFile(vaultFlag string) (string, error) {
 	paths := []string{}
 	dirName := "pkb"
-	// TODO: support files with other names from --vault flag
 	configFileName := "pkb.json"
+
 	if vaultFlag != "" {
-		configFileName = vaultFlag
+		configFileName = vaultFlag + ".json"
 	}
 
 	if xdg, ok := os.LookupEnv("XDG_CONFIG_DIR"); ok {

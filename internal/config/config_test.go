@@ -10,7 +10,6 @@ import (
 )
 
 func TestFindConfigFile(t *testing.T) {
-	// TODO: look at mocking current directory
 	testCases := map[string]struct {
 		xdgEnvValue   string
 		homeEnvValue  string
@@ -76,6 +75,52 @@ func TestGet(t *testing.T) {
 			vaultFlag:     "",
 			xdgEnvValue:   "testdata/xdg/invalid",
 			expectedError: config.ErrUnmashallingJSON,
+			expected:      config.Config{},
+		},
+		"ReturnsFileSpecifiedByVaultFlag": {
+			fileFlag:      "",
+			vaultFlag:     "work",
+			xdgEnvValue:   "testdata/xdg/valid",
+			expectedError: nil,
+			expected: config.Config{
+				Directory: "/home/username/notes",
+				Editor:    "nvim",
+				Templates: config.Templates{
+					"foo": config.Template{
+						File:      "bar.tpl.md",
+						OutputDir: "bar",
+					},
+				},
+			},
+		},
+		"ReturnsErrorIfVaultFlagFileIsNotFound": {
+			fileFlag:      "",
+			vaultFlag:     "foo",
+			xdgEnvValue:   "testdata/xdg/valid",
+			expectedError: config.ErrConfigNotFound,
+			expected:      config.Config{},
+		},
+		"ReturnsFileSpecifiedByFileFlagIfValid": {
+			fileFlag:      "testdata/xdg/valid/pkb/work.json",
+			vaultFlag:     "",
+			xdgEnvValue:   "testdata/xdg/valid",
+			expectedError: nil,
+			expected: config.Config{
+				Directory: "/home/username/notes",
+				Editor:    "nvim",
+				Templates: config.Templates{
+					"foo": config.Template{
+						File:      "bar.tpl.md",
+						OutputDir: "bar",
+					},
+				},
+			},
+		},
+		"ReturnsErrorIfFileFlagFileIsNotFound": {
+			fileFlag:      "testdata/xdg/valid/pkb/foo.json",
+			vaultFlag:     "",
+			xdgEnvValue:   "testdata/xdg/valid",
+			expectedError: config.ErrConfigNotFound,
 			expected:      config.Config{},
 		},
 	}
