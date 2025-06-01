@@ -10,7 +10,7 @@ e.g.:
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/tx3stn/pkb/main/schema/config.json",
+  "$schema": "https://raw.githubusercontent.com/tx3stn/pkb/main/.schema/schema.json",
   "directory": "/home/user",
   ...
 }
@@ -21,11 +21,7 @@ command to ensure they are correct.
 
 ## Examples
 
-An [example file](./example.config.json) has been added to display what the
+An [example file](./pkb.json) has been added to display what the
 configuration should look like.
 If you try editing it with an editor that supports JSON schemas you should see
 the field names in your auto complete and the description of what each field is for.
-
-This config file can be used to test out changes.
-It is configured to use the templates and create files in the `testdata`
-directory in the root of the repo.

@@ -3,7 +3,7 @@ name: json schema lint
 on:
   pull_request:
     paths:
-      - schema/*.json
+      - .schema/*.json
 
 jobs:
   lint-schema:
@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: 22
       - run: npm install -g ajv-cli
-      - run: ajv --spec draft2020 compile -s schema/config.json
+      - run: ajv --spec draft2020 compile -s .schema/schema.json
         name: validate schema
-      - run: ajv --spec draft2020 validate -s schema/config.json -d schema/example.config.json
+      - run: ajv --spec draft2020 validate -s .schema/schema.json -d .schema/pkb.json
         name: lint example config

@@ -109,7 +109,7 @@ By default `pkb` checks for the config file in your `$XDG_CONFIG_DIR`, or
 ### Schema
 
 You can see an example of the config file format in the
-[example.config.json](./schema/example.config.json) in the schema directory.
+[pkb.json](./.schema/pkb.json) in the schema directory.
 Make sure you add the `$schema` keyword to the top of your config file to
 for in editor validation and descriptions of what fields are used for.
 
