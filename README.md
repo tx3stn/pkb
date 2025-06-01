@@ -113,8 +113,10 @@ if you want to support multiple different config files for different uses.
 
 You can see an example of the config file format in the
 [pkb.json](./.schema/pkb.json) in the schema directory.
-Make sure you add the `$schema` keyword to the top of your config file to
-for in editor validation and descriptions of what fields are used for.
+
+> [!TIP]
+> Make sure you add the `$schema` keyword to the top of your config file to
+> for in editor validation and descriptions of what fields are used for.
 
 ### Expanding values in templates
 
@@ -150,14 +152,15 @@ The following values are currently supported:
 - `{{.Week}}` - the current week number.
 - `{{.Year}}` - the current year.
 
-You can combine the supported formats to use them together, e.g.:
-
-```json
-"name_format": "{{.Date}}-{{.Prompt}}"
-```
-
-In this example the document would be created with the current date then the
-value you typed in the prompt, e.g. `2022-09-19-typed-value.md`.
+> [!TIP]
+> You can combine the supported formats to use them together, e.g.:
+> 
+> ```json
+> "name_format": "{{.Date}}-{{.Prompt}}"
+> ```
+> 
+> In this example the document would be created with the current date then the
+> value you typed in the prompt, e.g. `2022-09-19-typed-value.md`.
 
 ### Selecting an output directory
 
@@ -223,7 +226,7 @@ If your `pkb` config directory looked like this:
 
 ```bash
 pkb/
-  ./pkb.json
+	./pkb.json
 	./personal.json
 	./work.json
 ```
@@ -236,7 +239,8 @@ pkb --vault work new
 
 To use the `work.json` config file to create a new document.
 
-> [!note] `pkb.json` is the name of the default config file.
+> [!TIP] 
+> `pkb.json` is the name of the default config file.
 > If no file with this name exists in your config directory and you don't
 > specify a `--vault` flag, `pkb` will error.
 > If you want to keep your configs aligned to your vaults you will need to 
