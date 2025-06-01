@@ -1,5 +1,5 @@
 {
-	"$schema": "./config.json",
+	"$schema": "./schema.json",
 	"accessible_mode": false,
 	"directory": "testdata/output",
 	"editor": "nvim",

@@ -32,11 +32,11 @@ lint:
 
 .PHONY: schema-example-lint
 schema-example-lint:
-	@$(ajv-docker) validate -s /repo/schema/config.json -d /repo/schema/example.config.json
+	@$(ajv-docker) validate -s /repo/.schema/schema.json -d /repo/.schema/pkb.json
 
 .PHONY: schema-validate
 schema-validate:
-	@$(ajv-docker) compile -s /repo/schema/config.json
+	@$(ajv-docker) compile -s /repo/.schema/schema.json
 
 .PHONY: test
 test:

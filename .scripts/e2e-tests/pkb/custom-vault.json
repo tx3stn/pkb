@@ -16,7 +16,7 @@
 	"templates": {
 		"simple": {
 			"file": "simple.md",
-			"output_dir": "simple"
+			"output_dir": "simple-custom"
 		}
 	}
 }

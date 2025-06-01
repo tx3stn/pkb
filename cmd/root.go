@@ -2,11 +2,7 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"github.com/tx3stn/pkb/internal/flags"
 )
 
@@ -33,32 +29,12 @@ func Execute() error {
 
 //nolint:gochecknoinits
 func init() {
-	cobra.OnInitialize(initConfig)
 	rootCmd.AddCommand(CreateNew())
 	rootCmd.AddCommand(CreateEdit())
 	rootCmd.AddCommand(CreateCopy())
 	rootCmd.AddCommand(CreateOpen())
 	rootCmd.PersistentFlags().
 		StringVar(&flags.ConfigFile, "config", "", "config file if not held at default location")
-
-	if err := viper.BindPFlag("config", rootCmd.PersistentFlags().Lookup("config")); err != nil {
-		fmt.Printf("error binding --config flag: %s", err)
-		os.Exit(1)
-	}
-}
-
-func initConfig() {
-	if flags.ConfigFile == "" {
-		viper.SetConfigName("config")
-		viper.SetConfigType("json")
-		viper.AddConfigPath("$XDG_CONFIG_DIR/pkb/")
-		viper.AddConfigPath("$HOME/.config/pkb/")
-	} else {
-		viper.SetConfigFile(flags.ConfigFile)
-	}
-
-	if err := viper.ReadInConfig(); err != nil {
-		fmt.Printf("error trying to read config file: %s", err)
-		os.Exit(1)
-	}
+	rootCmd.PersistentFlags().
+		StringVar(&flags.Vault, "vault", "pkb", "name of file to use in config file if not default pkb.json")
 }
