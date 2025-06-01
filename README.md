@@ -103,8 +103,11 @@ Open your notes directory in your specified editor.
 Config driven means **you** control how `pkb` works with the options in a
 config file.
 
-By default `pkb` checks for the config file in your `$XDG_CONFIG_DIR`, or
-`$HOME/.config`.
+By default `pkb` checks for a config file called `pkb.json` in your `$XDG_CONFIG_DIR`, 
+or `$HOME/.config` in a directory called `pkb`, e.g: `$HOME/.config/pkb/pkb.json`.
+
+See  [Using with multiple vaults or computers](#using-with-multiple-vaults-or-computers)
+if you want to support multiple different config files for different uses.
 
 ### Schema
 
