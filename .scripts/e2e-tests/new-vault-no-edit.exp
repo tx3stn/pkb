@@ -1,0 +1,12 @@
+#!/usr/bin/expect -f
+
+set timeout -1
+set config_dir [lindex $argv 0];
+set env(XDG_CONFIG_DIR) "$config_dir"
+
+spawn pkb --vault custom-vault new --no-edit
+match_max 100000
+expect -re ".*enter file name(.|\n|\r)*"
+send -- "foo\r"
+expect eof
+

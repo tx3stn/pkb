@@ -37,3 +37,16 @@ teardown() {
 	assert_line --index 0 "# foo document"
 	assert_line --index 1 "simple generation for test"
 }
+
+@test "pkb new : file is created using --vault flag" {
+	eval "run $BATS_TEST_DIRNAME/new-vault-no-edit.exp $BATS_TEST_DIRNAME"
+	assert_success
+
+	expected_path="$out_dir/simple-custom/foo.md"
+	assert_line --index 2 --partial "file created: $expected_path"
+
+	run cat "$expected_path"
+	assert_success
+	assert_line --index 0 "# foo document"
+	assert_line --index 1 "simple generation for test"
+}
