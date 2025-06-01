@@ -236,7 +236,8 @@ pkb --vault work new
 
 To use the `work.json` config file to create a new document.
 
-> [!note] `pkb.json` is the name of the default config file.
+> [!TIP] 
+> `pkb.json` is the name of the default config file.
 > If no file with this name exists in your config directory and you don't
 > specify a `--vault` flag, `pkb` will error.
 > If you want to keep your configs aligned to your vaults you will need to 
