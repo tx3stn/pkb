@@ -22,6 +22,7 @@ knowledge base.
   - [Accessible mode](#accessible-mode)
 - [Using with Obsidian](#using-with-obsidian)
   - [Expanding Obsidian Template Variables](#expanding-obsidian-template-variables)
+- [Using with multiple vaults or computers](#using-with-multiple-vaults-or-computers)
 
 ## Why?
 
@@ -204,3 +205,37 @@ customise the `date` and `time` values, as the syntax for this breaks the standa
 go template syntax used by `pkb`, so the templates would need to be pre-processed
 before they are rendered. This *may* be implemented in a future update, so if it's
 something you would like to see please create an issue requesting it.
+
+## Using with multiple vaults or computers
+
+If you use `Obsidian` with multiple vaults, or on multiple computers, you may
+wish to have different templates and therefore different `pkb` config files for
+each vault or computer.
+
+To support this `pkb` offers the `--vault` flag, which you can use to specify
+the name of the config file in your config directory, without needing to pass
+the full file path with the `--config` flag. e.g.:
+
+If your `pkb` config directory looked like this:
+
+```bash
+pkb/
+  ./pkb.json
+	./personal.json
+	./work.json
+```
+
+You could run the command:
+
+```bash
+pkb --vault work new
+```
+
+To use the `work.json` config file to create a new document.
+
+> [!note] `pkb.json` is the name of the default config file.
+> If no file with this name exists in your config directory and you don't
+> specify a `--vault` flag, `pkb` will error.
+> If you want to keep your configs aligned to your vaults you will need to 
+> either always pass the `--vault` flag, or make one of them your default and
+> keep that vault's config in `pkb.json`.
