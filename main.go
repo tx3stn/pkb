@@ -10,6 +10,7 @@ import (
 
 func main() {
 	code := 0
+
 	defer func() {
 		os.Exit(code)
 	}()

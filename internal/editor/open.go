@@ -3,19 +3,20 @@
 package editor
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"os/exec"
 )
 
 // Open opens the provided editor in the specified directory.
-func Open(editorCmd string, directory string) error {
-	return OpenFile(editorCmd, directory, ".")
+func Open(ctx context.Context, editorCmd string, directory string) error {
+	return OpenFile(ctx, editorCmd, directory, ".")
 }
 
 // OpenFile opens the provided file.
-func OpenFile(editorCmd string, directory string, fileName string) error {
-	cmd := exec.Command(editorCmd, fileName)
+func OpenFile(ctx context.Context, editorCmd string, directory string, fileName string) error {
+	cmd := exec.CommandContext(ctx, editorCmd, fileName)
 	cmd.Dir = directory
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout

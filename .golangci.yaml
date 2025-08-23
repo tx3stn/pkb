@@ -10,6 +10,7 @@ linters:
     - exhaustruct  # more annoying than useful.
     - tagliatelle  # config format is snake case not camel.
     - forbidigo
+    - noinlineerr
   exclusions:
     rules:
       - path: 'internal\/flags\/vars\.go'
