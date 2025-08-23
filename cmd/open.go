@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -18,7 +19,7 @@ func CreateOpen() *cobra.Command {
 				return fmt.Errorf("error getting config: %w", err)
 			}
 
-			if err := editor.Open(conf.Editor, conf.Directory); err != nil {
+			if err := editor.Open(context.Background(), conf.Editor, conf.Directory); err != nil {
 				return fmt.Errorf("error opening file in editor: %w", err)
 			}
 

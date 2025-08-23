@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"path/filepath"
 
@@ -35,7 +36,7 @@ func CreateEdit() *cobra.Command {
 				return fmt.Errorf("error creating absolute path for file: %w", err)
 			}
 
-			if err := editor.OpenFile(conf.Editor, conf.Directory, absPath); err != nil {
+			if err := editor.OpenFile(context.Background(), conf.Editor, conf.Directory, absPath); err != nil {
 				return fmt.Errorf("error opening file in editor: %w", err)
 			}
 
