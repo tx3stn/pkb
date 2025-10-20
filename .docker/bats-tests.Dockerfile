@@ -1,3 +1,12 @@
+FROM golang:1.25-alpine AS builder
+
+WORKDIR /app
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY . .
+RUN CGO_ENABLED=0 go build -ldflags "-X github.com/tx3stn/pkb/cmd.Version=e2e-test" -o pkb
+
 FROM bats/bats:1.12.0
 
 RUN apk add --no-cache \
@@ -5,6 +14,6 @@ RUN apk add --no-cache \
 	musl-dev \
 	expect
 
-COPY pkb /usr/local/bin/pkb
+COPY --from=builder /app/pkb /usr/bin/pkb
 
 ENTRYPOINT [ "bash" ]

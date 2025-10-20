@@ -31,6 +31,7 @@ func CreateNew() *cobra.Command {
 			}
 
 			renderer := template.NewRenderer(conf, selected)
+
 			createdFile, err := renderer.CreateAndSaveFile()
 			if err != nil {
 				return fmt.Errorf("error creating file: %w", err)

@@ -28,7 +28,8 @@ install: build
 
 .PHONY: lint
 lint:
-	@golangci-lint run -v ${DIR}
+	@golangci-lint fmt ${DIR}
+	@golangci-lint run -v --fix ${DIR}
 
 .PHONY: schema-example-lint
 schema-example-lint:

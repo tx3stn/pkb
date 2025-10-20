@@ -6,11 +6,12 @@ linters:
   default: all
   disable:
     - varnamelen  # impractical IRL.
-    - godox  # TODO statements are useful and shouldn't make a linter error.
+    - godox  # TODO: statements are useful and shouldn't make a linter error.
     - exhaustruct  # more annoying than useful.
     - tagliatelle  # config format is snake case not camel.
     - forbidigo
     - noinlineerr
+    - wsl
   exclusions:
     rules:
       - path: 'internal\/flags\/vars\.go'
@@ -70,6 +71,11 @@ linters:
         - ^golang.org/x/tools/go/analysis.Analyzer$
         - ^google.golang.org/protobuf/.+Options$
         - ^gopkg.in/yaml.v3.Node$
+    wsl_v5:
+      allow-first-in-block: true
+      allow-whole-block: false
+      branch-max-lines: 2
+      case-max-lines: 0
 
 formatters:
   enable:

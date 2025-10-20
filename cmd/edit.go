@@ -26,6 +26,7 @@ func CreateEdit() *cobra.Command {
 				conf.IgnoreFiles,
 				conf.AccessibleMode,
 			)
+
 			file, err := selector.SelectFromDir(conf.Directory)
 			if err != nil {
 				return fmt.Errorf("error selecting file: %w", err)

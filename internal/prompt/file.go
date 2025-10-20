@@ -2,6 +2,7 @@ package prompt
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/charmbracelet/huh"
@@ -55,15 +56,19 @@ func selectFile(filesInDir []string, accessible bool) (string, error) {
 		Title("select file:").
 		Value(&selected)
 
-	prompt.WithAccessible(accessible)
+	if accessible {
+		if err := prompt.RunAccessible(os.Stdout, os.Stdin); err != nil {
+			return "", fmt.Errorf("%w: %w", ErrSelectingFile, err)
+		}
+
+		return selected, nil
+	}
 
 	if err := prompt.Run(); err != nil {
 		return "", fmt.Errorf("%w: %w", ErrSelectingFile, err)
 	}
 
-	if !accessible {
-		fmt.Println(strings.ReplaceAll(prompt.View(), "\n", ""))
-	}
+	fmt.Println(strings.ReplaceAll(prompt.View(), "\n", ""))
 
 	return selected, nil
 }

@@ -2,6 +2,7 @@ package prompt
 
 import (
 	"fmt"
+	"os"
 	"sort"
 	"strings"
 
@@ -56,15 +57,19 @@ func selectDirectory(subDirectories []string, accessible bool) (string, error) {
 		Title("select directory:").
 		Value(&selected)
 
-	prompt.WithAccessible(accessible)
+	if accessible {
+		if err := prompt.RunAccessible(os.Stdout, os.Stdin); err != nil {
+			return "", fmt.Errorf("%w: %w", ErrSelectingDirectory, err)
+		}
+
+		return selected, nil
+	}
 
 	if err := prompt.Run(); err != nil {
 		return "", fmt.Errorf("%w: %w", ErrSelectingDirectory, err)
 	}
 
-	if !accessible {
-		fmt.Println(strings.ReplaceAll(prompt.View(), "\n", ""))
-	}
+	fmt.Println(strings.ReplaceAll(prompt.View(), "\n", ""))
 
 	return selected, nil
 }

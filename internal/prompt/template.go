@@ -3,6 +3,7 @@ package prompt
 import (
 	"fmt"
 	"maps"
+	"os"
 	"slices"
 	"sort"
 	"strings"
@@ -83,15 +84,19 @@ func selectTemplate(templates []string, accessible bool) (string, error) {
 		Title("select template:").
 		Value(&selected)
 
-	prompt.WithAccessible(accessible)
+	if accessible {
+		if err := prompt.RunAccessible(os.Stdout, os.Stdin); err != nil {
+			return "", fmt.Errorf("%w: %w", ErrSelectingTemplate, err)
+		}
+
+		return selected, nil
+	}
 
 	if err := prompt.Run(); err != nil {
 		return "", fmt.Errorf("%w: %w", ErrSelectingTemplate, err)
 	}
 
-	if !accessible {
-		fmt.Println(strings.ReplaceAll(prompt.View(), "\n", ""))
-	}
+	fmt.Println(strings.ReplaceAll(prompt.View(), "\n", ""))
 
 	return selected, nil
 }
