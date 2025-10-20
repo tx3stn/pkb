@@ -3,6 +3,7 @@ package prompt
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/charmbracelet/huh"
@@ -27,15 +28,19 @@ func userPrompt(promptString string, accessible bool) (string, error) {
 		Title(promptString).
 		Value(&result)
 
-	prompt.WithAccessible(accessible)
+	if accessible {
+		if err := prompt.RunAccessible(os.Stdout, os.Stdin); err != nil {
+			return "", fmt.Errorf("%w: %w", ErrSelectingTemplate, err)
+		}
+
+		return result, nil
+	}
 
 	if err := prompt.Run(); err != nil {
 		return "", fmt.Errorf("%w: %w", ErrSelectingTemplate, err)
 	}
 
-	if !accessible {
-		fmt.Println(strings.ReplaceAll(prompt.View(), "\n", ""))
-	}
+	fmt.Println(strings.ReplaceAll(prompt.View(), "\n", ""))
 
 	return result, nil
 }

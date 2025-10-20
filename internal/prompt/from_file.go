@@ -62,15 +62,19 @@ func selectFromOptions(opts []string, fileName string, accessible bool) ([]strin
 		Title(fmt.Sprintf("select from %s:", fileName)).
 		Value(&selected)
 
-	prompt.WithAccessible(accessible)
+	if accessible {
+		if err := prompt.RunAccessible(os.Stdout, os.Stdin); err != nil {
+			return []string{}, fmt.Errorf("error selecting options from template: %w", err)
+		}
+
+		return selected, nil
+	}
 
 	if err := prompt.Run(); err != nil {
 		return []string{}, fmt.Errorf("error selecting options from template: %w", err)
 	}
 
-	if !accessible {
-		fmt.Println(strings.ReplaceAll(prompt.View(), "\n", ""))
-	}
+	fmt.Println(strings.ReplaceAll(prompt.View(), "\n", ""))
 
 	return selected, nil
 }
