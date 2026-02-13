@@ -26,6 +26,10 @@ linters:
       - text: 'unused-parameter: parameter \S+ seems to be unused, consider removing or renaming it as _'
         linters:
           - revive
+      - path: 'internal\/template\/*'
+        linters:
+          - revive
+        text: 'var-naming: avoid package names that conflict with Go standard library package names'
   settings:
     depguard:
       rules:

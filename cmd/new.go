@@ -43,7 +43,12 @@ func CreateNew() *cobra.Command {
 					return fmt.Errorf("error getting absolute path of created file: %w", err)
 				}
 
-				if err := editor.OpenFile(context.Background(), conf.Editor, conf.Directory, fullPath); err != nil {
+				if err := editor.OpenFile(
+					context.Background(),
+					conf.Editor,
+					conf.Directory,
+					fullPath,
+				); err != nil {
 					return fmt.Errorf("error opening file in editor: %w", err)
 				}
 			}
