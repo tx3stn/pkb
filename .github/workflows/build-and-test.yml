@@ -21,7 +21,7 @@ jobs:
         run: make install
       - name: test
         run: ./.scripts/run-unit-tests-with-summary.sh > "$GITHUB_STEP_SUMMARY"
-      - uses: bats-core/bats-action@3.0.1
+      - uses: bats-core/bats-action@4.0.0
         name: setup bats
         id: setup-bats
       - name: install expect
