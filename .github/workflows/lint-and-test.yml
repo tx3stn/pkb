@@ -1,9 +1,7 @@
-name: go build and test
+name: lint-and-test
 
 on:
-  push:
-    branches-ignore:
-      - main
+  workflow_call:
 
 jobs:
   build-and-test:
@@ -15,11 +13,11 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
-          go-version: 1.25
+          go-version: "1.26"
           cache: true
       - name: build binary
         run: make install
-      - name: test
+      - name: unit tests
         run: ./.scripts/run-unit-tests-with-summary.sh > "$GITHUB_STEP_SUMMARY"
       - uses: bats-core/bats-action@4.0.0
         name: setup bats
@@ -32,3 +30,19 @@ jobs:
           BATS_LIB_PATH: ${{ steps.setup-bats.outputs.lib-path }}
           TERM: xterm
         run: ./.scripts/run-e2e-tests-with-summary.sh > "$GITHUB_STEP_SUMMARY"
+
+  lint:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: "1.26"
+          cache: true
+      - uses: golangci/golangci-lint-action@v9
+        name: golangci-lint
+        with:
+          version: latest

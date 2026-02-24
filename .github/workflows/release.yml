@@ -1,0 +1,50 @@
+name: release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  ci:
+    uses: ./.github/workflows/lint-and-test.yml
+
+  release:
+    needs:
+      - ci
+    permissions:
+      contents: write
+      packages: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - run: |
+          git config --global user.email tx3stn@github-action.com
+          git config --global user.name 'tx3stn github actions'
+          VERSION=$(head -n 1 VERSION)
+          git fetch --force --tags
+          if git rev-parse -q --verify "refs/tags/${VERSION}" >/dev/null; then
+            echo "Tag ${VERSION} already exists; skipping tag creation"
+          else
+            git tag -a "${VERSION}" -m "Release ${VERSION}"
+            git push origin "${VERSION}"
+          fi
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: "1.26"
+          cache: true
+      # - uses: docker/login-action@v3
+      #   with:
+      #     registry: ghcr.io
+      #     username: ${{ github.actor }}
+      #     password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: goreleaser/goreleaser-action@v7
+        with:
+          distribution: goreleaser
+          version: latest
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

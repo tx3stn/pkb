@@ -1,0 +1,8 @@
+name: pull-request
+
+on:
+  pull_request:
+
+jobs:
+  ci:
+    uses: ./.github/workflows/lint-and-test.yml
