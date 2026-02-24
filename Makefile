@@ -43,6 +43,9 @@ schema-validate:
 test:
 	@CGO_ENABLED=1 go test ${DIR} -race -cover
 
+.PHONY: testsum
+testsum:
+	@CGO_ENABLED=1 gotestsum --format-hide-empty-pkg --format pkgname-and-test-fails -- -race ${DIR}
 
 .PHONY: test-e2e
 test-e2e: build
