@@ -5,3 +5,4 @@ _null-ls*
 testdata/output/**/*.md
 !testdata/output/templates/*.md
 *.gif
+.DS_Store

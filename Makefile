@@ -29,7 +29,7 @@ install: build
 .PHONY: lint
 lint:
 	@golangci-lint fmt ${DIR}
-	@golangci-lint run -v --fix ${DIR}
+	@golangci-lint run --fix ${DIR}
 
 .PHONY: schema-example-lint
 schema-example-lint:
@@ -41,11 +41,11 @@ schema-validate:
 
 .PHONY: test
 test:
-	@CGO_ENABLED=1 go test ${DIR} -race -cover
-
-.PHONY: testsum
-testsum:
-	@CGO_ENABLED=1 gotestsum --format-hide-empty-pkg --format pkgname-and-test-fails -- -race ${DIR}
+	@if command -v gotestsum >/dev/null 2>&1; then \
+		CGO_ENABLED=1 gotestsum --format-hide-empty-pkg --format pkgname-and-test-fails -- ./... -race -cover; \
+	else \
+		CGO_ENABLED=1 go test ./... -race -cover; \
+	fi
 
 .PHONY: test-e2e
 test-e2e: build
