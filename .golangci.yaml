@@ -7,6 +7,7 @@ linters:
     - varnamelen  # impractical IRL.
     - godox  # TODO: statements are useful and shouldn't make a linter error.
     - exhaustruct  # more annoying than useful.
+    - exhaustruct_v5
     - tagliatelle  # config format is snake case not camel.
     - forbidigo
     - noinlineerr
